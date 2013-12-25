@@ -1,0 +1,10 @@
+libemlrt.lib
+libut.lib
+libmwblas.lib
+libmwmathutil.lib
+libiomp5md.lib
+/export:mexFunction
+/export:emlrtMexFcnProperties
+/export:mog
+/export:mog_initialize
+/export:mog_terminate
