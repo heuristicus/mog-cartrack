@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_mexutil'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -13,20 +13,21 @@
 #include "mog_mexutil.h"
 
 /* Function Definitions */
-void error(emlrtCTX aTLS, const mxArray *b, emlrtMCInfo *location)
+void error(const mxArray *b, emlrtMCInfo *location)
 {
   const mxArray *pArray;
   pArray = b;
-  emlrtCallMATLABR2012b(aTLS, 0, NULL, 1, &pArray, "error", TRUE, location);
+  emlrtCallMATLABR2012b(emlrtRootTLSGlobal, 0, NULL, 1, &pArray, "error", TRUE,
+                        location);
 }
 
-const mxArray *message(emlrtCTX aTLS, const mxArray *b, emlrtMCInfo *location)
+const mxArray *message(const mxArray *b, emlrtMCInfo *location)
 {
   const mxArray *pArray;
-  const mxArray *m5;
+  const mxArray *m6;
   pArray = b;
-  return emlrtCallMATLABR2012b(aTLS, 1, &m5, 1, &pArray, "message", TRUE,
-    location);
+  return emlrtCallMATLABR2012b(emlrtRootTLSGlobal, 1, &m6, 1, &pArray, "message",
+    TRUE, location);
 }
 
 /* End of code generation (mog_mexutil.c) */

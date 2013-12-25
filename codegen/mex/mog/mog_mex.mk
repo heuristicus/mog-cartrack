@@ -12,7 +12,6 @@ SRC_FILES =  \
 	mog_initialize.c \
 	mog_terminate.c \
 	mog.c \
-	modelInit.c \
 	update.c \
 	match.c \
 	mog_api.c \

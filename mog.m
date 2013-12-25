@@ -1,4 +1,4 @@
-function [foreground] = mog(image,count)
+function [foreground,background] = mog(image,count)
 %MOG Summary of this function goes here
 %   Detailed explanation goes here
 % Inputs:
@@ -6,6 +6,7 @@ function [foreground] = mog(image,count)
 %         
 % Outputs
 %         foreground:         MxN
+%         background:         MxNxC
 persistent models;
 
 M = size(image,1);
@@ -13,16 +14,16 @@ N = size(image,2);
 C = size(image,3);
 
 K = 3;       %Number of Gaussians
-T = 0.5;      %Background Threshold
-
+T = 0.7;      %Background Threshold
 
 if isempty(models)
    models = repmat(struct('weight',zeros(K,1), 'mu', zeros(C,K), 'sigma',zeros(K,1)),M,N); 
 end
 
 foreground = zeros(M,N);
+background = zeros(M,N,C);
 
-parfor m=1:M
+for m=1:M
     for n=1:N        
         X = reshape(image(m,n,:),C,1);
         %Preallocate
@@ -44,13 +45,13 @@ parfor m=1:M
         %Update model
         [weight,mu,sigma] = update(X,prevWeight,prevMu,prevSigma);
         
-        modelX.weight = zeros(K,1);
-        modelX.mu = zeros(C,K);
-        modelX.sigma = zeros(K,1);
+        models(m,n).weight = zeros(K,1);
+        models(m,n).mu = zeros(C,K);
+        models(m,n).sigma = zeros(K,1);
         
-        modelX.weight = weight;
-        modelX.mu = mu;
-        modelX.sigma = sigma;
+        models(m,n).weight = weight;
+        models(m,n).mu = mu;
+        models(m,n).sigma = sigma;
         
         %Sort weights/sigma
         ratio = weight./sigma;
@@ -60,6 +61,9 @@ parfor m=1:M
         [~,B] = min(sumB>T);
         bgIndexes = index(1:B);
         
+        %Set the background to the most likely gaussian
+        background(m,n,:) = models(m,n).mu(:,bgIndexes(1));
+       
         %See if the pixel matches a background gaussian
         matchingIndex = find(match(X,mu,sigma));
         if isempty(matchingIndex)
@@ -72,5 +76,6 @@ parfor m=1:M
         end
     end    
 end
+background = uint8(background);
 
 end

@@ -3,8 +3,6 @@
 </TD></TR><TR></TR>
 <tr><td><a href="match_c.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="match_c.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">match.c</a><span> </span></td></tr><tr></tr>
 <tr><td><a href="match_h.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="match_h.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">match.h</a><span> </span></td></tr><tr></tr>
-<tr><td><a href="modelInit_c.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="modelInit_c.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">modelInit.c</a><span> </span></td></tr><tr></tr>
-<tr><td><a href="modelInit_h.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="modelInit_h.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">modelInit.h</a><span> </span></td></tr><tr></tr>
 <tr><td><a href="mog_c.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="mog_c.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">mog.c</a><span> </span></td></tr><tr></tr>
 <tr><td><a href="mog_h.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="mog_h.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">mog.h</a><span> </span></td></tr><tr></tr>
 <tr><td><a href="mog_api_c.html" onclick="if (top) if (top.tocHiliteMe) top.tocHiliteMe(window, this, false);" id="mog_api_c.html" target="rtwreport_document_frame" name="rtwIdGenFileLinks">mog_api.c</a><span> </span></td></tr><tr></tr>

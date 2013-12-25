@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_mexutil'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -20,11 +20,10 @@
 #include "emlrt.h"
 #include "blas.h"
 #include "rtwtypes.h"
-#include "omp.h"
 #include "mog_types.h"
 
 /* Function Declarations */
-extern void error(emlrtCTX aTLS, const mxArray *b, emlrtMCInfo *location);
-extern const mxArray *message(emlrtCTX aTLS, const mxArray *b, emlrtMCInfo *location);
+extern void error(const mxArray *b, emlrtMCInfo *location);
+extern const mxArray *message(const mxArray *b, emlrtMCInfo *location);
 #endif
 /* End of code generation (mog_mexutil.h) */

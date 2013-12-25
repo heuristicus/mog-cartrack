@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_api'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -14,7 +14,7 @@
 #include "mog_emxutil.h"
 
 /* Variable Definitions */
-static emlrtRTEInfo p_emlrtRTEI = { 1, 1, "mog_api", "" };
+static emlrtRTEInfo k_emlrtRTEI = { 1, 1, "mog_api", "" };
 
 /* Function Declarations */
 static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
@@ -22,6 +22,7 @@ static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
 static const mxArray *b_emlrt_marshallOut(emxArray_real_T *u);
 static void b_info_helper(ResolvedFunctionInfo info[161]);
 static real_T c_emlrt_marshallIn(const mxArray *count, const char_T *identifier);
+static const mxArray *c_emlrt_marshallOut(emxArray_uint8_T *u);
 static void c_info_helper(ResolvedFunctionInfo info[161]);
 static real_T d_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
   *parentId);
@@ -45,11 +46,11 @@ static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
 static const mxArray *b_emlrt_marshallOut(emxArray_real_T *u)
 {
   const mxArray *y;
-  static const int32_T iv6[2] = { 0, 0 };
+  static const int32_T iv7[2] = { 0, 0 };
 
   const mxArray *m4;
   y = NULL;
-  m4 = mxCreateNumericArray(2, (int32_T *)&iv6, mxDOUBLE_CLASS, mxREAL);
+  m4 = mxCreateNumericArray(2, (int32_T *)&iv7, mxDOUBLE_CLASS, mxREAL);
   mxSetData((mxArray *)m4, (void *)u->data);
   mxSetDimensions((mxArray *)m4, u->size, 2);
   emlrtAssign(&y, m4);
@@ -659,6 +660,20 @@ static real_T c_emlrt_marshallIn(const mxArray *count, const char_T *identifier)
   return y;
 }
 
+static const mxArray *c_emlrt_marshallOut(emxArray_uint8_T *u)
+{
+  const mxArray *y;
+  static const int32_T iv8[3] = { 0, 0, 0 };
+
+  const mxArray *m5;
+  y = NULL;
+  m5 = mxCreateNumericArray(3, (int32_T *)&iv8, mxUINT8_CLASS, mxREAL);
+  mxSetData((mxArray *)m5, (void *)u->data);
+  mxSetDimensions((mxArray *)m5, u->size, 3);
+  emlrtAssign(&y, m5);
+  return y;
+}
+
 static void c_info_helper(ResolvedFunctionInfo info[161])
 {
   info[128].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sort.m";
@@ -991,20 +1006,20 @@ static real_T d_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
 static void e_emlrt_marshallIn(const mxArray *src, const emlrtMsgIdentifier
   *msgId, emxArray_real_T *ret)
 {
-  int32_T iv7[3];
+  int32_T iv9[3];
   boolean_T bv0[3];
   int32_T i;
-  int32_T iv8[3];
+  int32_T iv10[3];
   for (i = 0; i < 3; i++) {
-    iv7[i] = -1;
+    iv9[i] = -1;
     bv0[i] = TRUE;
   }
 
   emlrtCheckVsBuiltInR2012b(emlrtRootTLSGlobal, msgId, src, "double", FALSE, 3U,
-    iv7, bv0, iv8);
-  ret->size[0] = iv8[0];
-  ret->size[1] = iv8[1];
-  ret->size[2] = iv8[2];
+    iv9, bv0, iv10);
+  ret->size[0] = iv10[0];
+  ret->size[1] = iv10[1];
+  ret->size[2] = iv10[2];
   ret->allocatedSize = ret->size[0] * ret->size[1] * ret->size[2];
   ret->data = (real_T *)mxGetData(src);
   ret->canFreeData = FALSE;
@@ -1024,9 +1039,9 @@ static void emlrt_marshallIn(const mxArray *image, const char_T *identifier,
 static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[161])
 {
   const mxArray *y;
-  int32_T iv5[1];
-  int32_T i10;
-  ResolvedFunctionInfo *r0;
+  int32_T iv6[1];
+  int32_T i4;
+  ResolvedFunctionInfo *r8;
   const char * b_u;
   const mxArray *b_y;
   const mxArray *m3;
@@ -1039,54 +1054,54 @@ static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[161])
   const mxArray *h_y;
   const mxArray *i_y;
   y = NULL;
-  iv5[0] = 161;
-  emlrtAssign(&y, mxCreateStructArray(1, iv5, 0, NULL));
-  for (i10 = 0; i10 < 161; i10++) {
-    r0 = &u[i10];
-    b_u = r0->context;
+  iv6[0] = 161;
+  emlrtAssign(&y, mxCreateStructArray(1, iv6, 0, NULL));
+  for (i4 = 0; i4 < 161; i4++) {
+    r8 = &u[i4];
+    b_u = r8->context;
     b_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&b_y, m3);
-    emlrtAddField(y, b_y, "context", i10);
-    b_u = r0->name;
+    emlrtAddField(y, b_y, "context", i4);
+    b_u = r8->name;
     c_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&c_y, m3);
-    emlrtAddField(y, c_y, "name", i10);
-    b_u = r0->dominantType;
+    emlrtAddField(y, c_y, "name", i4);
+    b_u = r8->dominantType;
     d_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&d_y, m3);
-    emlrtAddField(y, d_y, "dominantType", i10);
-    b_u = r0->resolved;
+    emlrtAddField(y, d_y, "dominantType", i4);
+    b_u = r8->resolved;
     e_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&e_y, m3);
-    emlrtAddField(y, e_y, "resolved", i10);
-    c_u = r0->fileTimeLo;
+    emlrtAddField(y, e_y, "resolved", i4);
+    c_u = r8->fileTimeLo;
     f_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&f_y, m3);
-    emlrtAddField(y, f_y, "fileTimeLo", i10);
-    c_u = r0->fileTimeHi;
+    emlrtAddField(y, f_y, "fileTimeLo", i4);
+    c_u = r8->fileTimeHi;
     g_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&g_y, m3);
-    emlrtAddField(y, g_y, "fileTimeHi", i10);
-    c_u = r0->mFileTimeLo;
+    emlrtAddField(y, g_y, "fileTimeHi", i4);
+    c_u = r8->mFileTimeLo;
     h_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&h_y, m3);
-    emlrtAddField(y, h_y, "mFileTimeLo", i10);
-    c_u = r0->mFileTimeHi;
+    emlrtAddField(y, h_y, "mFileTimeLo", i4);
+    c_u = r8->mFileTimeHi;
     i_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&i_y, m3);
-    emlrtAddField(y, i_y, "mFileTimeHi", i10);
+    emlrtAddField(y, i_y, "mFileTimeHi", i4);
   }
 
   return y;
@@ -1720,24 +1735,29 @@ const mxArray *emlrtMexFcnResolvedFunctionsInfo(void)
   return nameCaptureInfo;
 }
 
-void mog_api(const mxArray * const prhs[2], const mxArray *plhs[1])
+void mog_api(const mxArray * const prhs[2], const mxArray *plhs[2])
 {
   emxArray_real_T *image;
   emxArray_real_T *foreground;
+  emxArray_uint8_T *background;
   real_T count;
   emlrtHeapReferenceStackEnterFcnR2012b(emlrtRootTLSGlobal);
-  c_emxInit_real_T(emlrtRootTLSGlobal, &image, 3, &p_emlrtRTEI, TRUE);
-  emxInit_real_T(emlrtRootTLSGlobal, &foreground, 2, &p_emlrtRTEI, TRUE);
+  c_emxInit_real_T(&image, 3, &k_emlrtRTEI, TRUE);
+  emxInit_real_T(&foreground, 2, &k_emlrtRTEI, TRUE);
+  emxInit_uint8_T(&background, 3, &k_emlrtRTEI, TRUE);
 
   /* Marshall function inputs */
   emlrt_marshallIn(emlrtAlias(prhs[0]), "image", image);
   count = c_emlrt_marshallIn(emlrtAliasP(prhs[1]), "count");
 
   /* Invoke the target function */
-  mog(emlrtRootTLSGlobal, image, count, foreground);
+  mog(image, count, foreground, background);
 
   /* Marshall function outputs */
   plhs[0] = b_emlrt_marshallOut(foreground);
+  plhs[1] = c_emlrt_marshallOut(background);
+  background->canFreeData = FALSE;
+  emxFree_uint8_T(&background);
   foreground->canFreeData = FALSE;
   emxFree_real_T(&foreground);
   image->canFreeData = FALSE;

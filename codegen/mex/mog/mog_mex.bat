@@ -19,8 +19,8 @@ echo LINKOPTIMFLAGS=%LINKOPTIMFLAGS%>> mog_mex.mki
 echo LINKDEBUGFLAGS=%LINKDEBUGFLAGS%>> mog_mex.mki
 echo MATLAB_ARCH=%MATLAB_ARCH%>> mog_mex.mki
 echo BORLAND=%BORLAND%>> mog_mex.mki
-echo OMPFLAGS=/openmp >> mog_mex.mki
-echo OMPLINKFLAGS=/nodefaultlib:vcomp /LIBPATH:"C:\PROGRA~1\MATLAB\R2013a\bin\win64" >> mog_mex.mki
+echo OMPFLAGS= >> mog_mex.mki
+echo OMPLINKFLAGS= >> mog_mex.mki
 echo EMC_COMPILER=msvc110>> mog_mex.mki
 echo EMC_CONFIG=optim>> mog_mex.mki
 "C:\Program Files\MATLAB\R2013a\bin\win64\gmake" -B -f mog_mex.mk

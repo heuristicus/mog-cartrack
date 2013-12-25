@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_data'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -16,92 +16,104 @@
 const volatile char_T *emlrtBreakCheckR2012bFlagVar;
 emxArray_struct_T *models;
 boolean_T models_not_empty;
-emlrtRSInfo s_emlrtRSI = { 55, "mtimes",
+emlrtRSInfo h_emlrtRSI = { 48, "eml_assert_valid_size_arg",
+  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/eml_assert_valid_size_arg.m"
+};
+
+emlrtRSInfo n_emlrtRSI = { 20, "eml_error",
+  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/eml_error.m" };
+
+emlrtRSInfo u_emlrtRSI = { 55, "mtimes",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
 
-emlrtRSInfo t_emlrtRSI = { 21, "mtimes",
+emlrtRSInfo v_emlrtRSI = { 21, "mtimes",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
 
-emlrtRSInfo u_emlrtRSI = { 89, "mtimes",
+emlrtRSInfo w_emlrtRSI = { 89, "mtimes",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
 
-emlrtRSInfo v_emlrtRSI = { 54, "eml_xgemm",
+emlrtRSInfo x_emlrtRSI = { 54, "eml_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/eml_xgemm.m" };
 
-emlrtRSInfo w_emlrtRSI = { 20, "eml_blas_xgemm",
+emlrtRSInfo y_emlrtRSI = { 20, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo x_emlrtRSI = { 32, "eml_blas_xgemm",
+emlrtRSInfo ab_emlrtRSI = { 32, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo y_emlrtRSI = { 63, "eml_refblas_xgemm",
+emlrtRSInfo bb_emlrtRSI = { 63, "eml_refblas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/refblas/eml_refblas_xgemm.m"
 };
 
-emlrtRSInfo ab_emlrtRSI = { 85, "eml_refblas_xgemm",
+emlrtRSInfo cb_emlrtRSI = { 85, "eml_refblas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/refblas/eml_refblas_xgemm.m"
 };
 
-emlrtRSInfo bb_emlrtRSI = { 89, "eml_refblas_xgemm",
+emlrtRSInfo db_emlrtRSI = { 89, "eml_refblas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/refblas/eml_refblas_xgemm.m"
 };
 
-emlrtRSInfo cb_emlrtRSI = { 110, "eml_blas_xgemm",
+emlrtRSInfo eb_emlrtRSI = { 110, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo db_emlrtRSI = { 111, "eml_blas_xgemm",
+emlrtRSInfo fb_emlrtRSI = { 111, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo eb_emlrtRSI = { 112, "eml_blas_xgemm",
+emlrtRSInfo gb_emlrtRSI = { 112, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo fb_emlrtRSI = { 113, "eml_blas_xgemm",
+emlrtRSInfo hb_emlrtRSI = { 113, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo gb_emlrtRSI = { 114, "eml_blas_xgemm",
+emlrtRSInfo ib_emlrtRSI = { 114, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo hb_emlrtRSI = { 115, "eml_blas_xgemm",
+emlrtRSInfo jb_emlrtRSI = { 115, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo ib_emlrtRSI = { 119, "eml_blas_xgemm",
+emlrtRSInfo kb_emlrtRSI = { 119, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo jb_emlrtRSI = { 122, "eml_blas_xgemm",
+emlrtRSInfo lb_emlrtRSI = { 122, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo kb_emlrtRSI = { 125, "eml_blas_xgemm",
+emlrtRSInfo mb_emlrtRSI = { 125, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo lb_emlrtRSI = { 128, "eml_blas_xgemm",
+emlrtRSInfo nb_emlrtRSI = { 128, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo mb_emlrtRSI = { 131, "eml_blas_xgemm",
+emlrtRSInfo ob_emlrtRSI = { 131, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo nb_emlrtRSI = { 134, "eml_blas_xgemm",
+emlrtRSInfo pb_emlrtRSI = { 134, "eml_blas_xgemm",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_blas_xgemm.m"
 };
 
-emlrtRSInfo ob_emlrtRSI = { 14, "eml_c_cast",
+emlrtRSInfo qb_emlrtRSI = { 14, "eml_c_cast",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/blas/external/eml_c_cast.m"
 };
 
-emlrtRTEInfo d_emlrtRTEI = { 90, 13, "mtimes",
-  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
+emlrtMCInfo emlrtMCI = { 49, 13, "eml_assert_valid_size_arg",
+  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/eml_assert_valid_size_arg.m"
+};
+
+emlrtMCInfo b_emlrtMCI = { 48, 23, "eml_assert_valid_size_arg",
+  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/eml_assert_valid_size_arg.m"
+};
 
 emlrtMCInfo g_emlrtMCI = { 90, 13, "mtimes",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
@@ -109,7 +121,10 @@ emlrtMCInfo g_emlrtMCI = { 90, 13, "mtimes",
 emlrtMCInfo h_emlrtMCI = { 89, 23, "mtimes",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/ops/mtimes.m" };
 
-emlrtRTEInfo h_emlrtRTEI = { 127, 5, "find",
+emlrtRTEInfo d_emlrtRTEI = { 127, 5, "find",
   "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/elmat/find.m" };
+
+emlrtRTEInfo n_emlrtRTEI = { 20, 5, "eml_error",
+  "C:/Program Files/MATLAB/R2013a/toolbox/eml/lib/matlab/eml/eml_error.m" };
 
 /* End of code generation (mog_data.c) */

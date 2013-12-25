@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_terminate'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -17,8 +17,7 @@
 /* Function Definitions */
 void mog_atexit(void)
 {
-  emlrtCreateRootTLS(&emlrtRootTLSGlobal, &emlrtContextGlobal,
-                     emlrtLockerFunction, omp_get_num_procs());
+  emlrtCreateRootTLS(&emlrtRootTLSGlobal, &emlrtContextGlobal, NULL, 1);
   emlrtEnterRtStackR2012b(emlrtRootTLSGlobal);
   emxFree_struct_T(&models);
   emlrtLeaveRtStackR2012b(emlrtRootTLSGlobal);

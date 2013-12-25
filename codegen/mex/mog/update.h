@@ -3,7 +3,7 @@
  *
  * Code generation for function 'update'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -20,10 +20,9 @@
 #include "emlrt.h"
 #include "blas.h"
 #include "rtwtypes.h"
-#include "omp.h"
 #include "mog_types.h"
 
 /* Function Declarations */
-extern void update(emlrtCTX aTLS, const emxArray_real_T *X, real_T weight[3], emxArray_real_T *mu, real_T sigma[3]);
+extern void update(const emxArray_real_T *X, real_T weight[3], emxArray_real_T *mu, real_T sigma[3]);
 #endif
 /* End of code generation (update.h) */

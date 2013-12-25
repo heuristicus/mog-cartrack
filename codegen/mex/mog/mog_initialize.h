@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_initialize'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -20,7 +20,6 @@
 #include "emlrt.h"
 #include "blas.h"
 #include "rtwtypes.h"
-#include "omp.h"
 #include "mog_types.h"
 
 /* Function Declarations */

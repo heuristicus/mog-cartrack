@@ -15,7 +15,7 @@
 <a name="3"><font color="#888888 "><i>    3   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="4"><font color="#888888 "><i>    4   </i></font></a><font color="#117755"><I> * Code generation for function 'mog_mexutil'</i></font>
 <a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> *</i></font>
-<a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> * C source code generated on: Wed Dec 25 11:02:59 2013</i></font>
+<a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> * C source code generated on: Wed Dec 25 12:08:53 2013</i></font>
 <a name="7"><font color="#888888 "><i>    7   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="8"><font color="#888888 "><i>    8   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="9"><font color="#888888 "><i>    9   </i></font></a>
@@ -25,24 +25,25 @@
 <a name="13"><font color="#888888 "><i>   13   </i></font></a><font color="#992211">#</font><font color="#992211"><b>include</b></font> <font color="#992211">&quot;mog_mexutil.h&quot;</font>
 <a name="14"><font color="#888888 "><i>   14   </i></font></a>
 <a name="15"><font color="#888888 "><i>   15   </i></font></a><font color="#117755"><i>/* Function Definitions */</i></font>
-<a name="16"><font color="#888888 "><i>   16   </i></font></a><font color="#112266"><b>void</b></font> <a name="fcn_error">error</a>(emlrtCTX aTLS, <font color="#112266"><b>const</b></font> mxArray *b, emlrtMCInfo *location)
+<a name="16"><font color="#888888 "><i>   16   </i></font></a><font color="#112266"><b>void</b></font> <a name="fcn_error">error</a>(<font color="#112266"><b>const</b></font> mxArray *b, emlrtMCInfo *location)
 <a name="17"><font color="#888888 "><i>   17   </i></font></a><b>{</b>
 <a name="18"><font color="#888888 "><i>   18   </i></font></a>  <font color="#112266"><b>const</b></font> mxArray *pArray;
 <a name="19"><font color="#888888 "><i>   19   </i></font></a>  pArray = b;
-<a name="20"><font color="#888888 "><i>   20   </i></font></a>  emlrtCallMATLABR2012b(aTLS, 0, NULL, 1, &amp;pArray, <font color="#1122ff">&quot;error&quot;</font>, TRUE, location);
-<a name="21"><font color="#888888 "><i>   21   </i></font></a><b>}</b>
-<a name="22"><font color="#888888 "><i>   22   </i></font></a>
-<a name="23"><font color="#888888 "><i>   23   </i></font></a><font color="#112266"><b>const</b></font> mxArray *<a name="fcn_message">message</a>(emlrtCTX aTLS, <font color="#112266"><b>const</b></font> mxArray *b, emlrtMCInfo *location)
-<a name="24"><font color="#888888 "><i>   24   </i></font></a><b>{</b>
-<a name="25"><font color="#888888 "><i>   25   </i></font></a>  <font color="#112266"><b>const</b></font> mxArray *pArray;
-<a name="26"><font color="#888888 "><i>   26   </i></font></a>  <font color="#112266"><b>const</b></font> mxArray *m5;
-<a name="27"><font color="#888888 "><i>   27   </i></font></a>  pArray = b;
-<a name="28"><font color="#888888 "><i>   28   </i></font></a>  <font color="#112266"><b>return</b></font> emlrtCallMATLABR2012b(aTLS, 1, &amp;m5, 1, &amp;pArray, <font color="#1122ff">&quot;message&quot;</font>, TRUE,
-<a name="29"><font color="#888888 "><i>   29   </i></font></a>    location);
-<a name="30"><font color="#888888 "><i>   30   </i></font></a><b>}</b>
-<a name="31"><font color="#888888 "><i>   31   </i></font></a>
-<a name="32"><font color="#888888 "><i>   32   </i></font></a><font color="#117755"><i>/* End of code generation (mog_mexutil.c) */</i></font>
-<a name="33"><font color="#888888 "><i>   33   </i></font></a></pre>
+<a name="20"><font color="#888888 "><i>   20   </i></font></a>  emlrtCallMATLABR2012b(<a href="mog_mex_c.html#var_emlrtRootTLSGlobal" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_emlrtRootTLSGlobal');" target="rtwreport_document_frame"><font color="#1122aa">emlrtRootTLSGlobal</font></a>, 0, NULL, 1, &amp;pArray, <font color="#1122ff">&quot;error&quot;</font>, TRUE,
+<a name="21"><font color="#888888 "><i>   21   </i></font></a>                        location);
+<a name="22"><font color="#888888 "><i>   22   </i></font></a><b>}</b>
+<a name="23"><font color="#888888 "><i>   23   </i></font></a>
+<a name="24"><font color="#888888 "><i>   24   </i></font></a><font color="#112266"><b>const</b></font> mxArray *<a name="fcn_message">message</a>(<font color="#112266"><b>const</b></font> mxArray *b, emlrtMCInfo *location)
+<a name="25"><font color="#888888 "><i>   25   </i></font></a><b>{</b>
+<a name="26"><font color="#888888 "><i>   26   </i></font></a>  <font color="#112266"><b>const</b></font> mxArray *pArray;
+<a name="27"><font color="#888888 "><i>   27   </i></font></a>  <font color="#112266"><b>const</b></font> mxArray *m6;
+<a name="28"><font color="#888888 "><i>   28   </i></font></a>  pArray = b;
+<a name="29"><font color="#888888 "><i>   29   </i></font></a>  <font color="#112266"><b>return</b></font> emlrtCallMATLABR2012b(<a href="mog_mex_c.html#var_emlrtRootTLSGlobal" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_emlrtRootTLSGlobal');" target="rtwreport_document_frame"><font color="#1122aa">emlrtRootTLSGlobal</font></a>, 1, &amp;m6, 1, &amp;pArray, <font color="#1122ff">&quot;message&quot;</font>,
+<a name="30"><font color="#888888 "><i>   30   </i></font></a>    TRUE, location);
+<a name="31"><font color="#888888 "><i>   31   </i></font></a><b>}</b>
+<a name="32"><font color="#888888 "><i>   32   </i></font></a>
+<a name="33"><font color="#888888 "><i>   33   </i></font></a><font color="#117755"><i>/* End of code generation (mog_mexutil.c) */</i></font>
+<a name="34"><font color="#888888 "><i>   34   </i></font></a></pre>
 </td></tr></table>
 </p>
 </body>

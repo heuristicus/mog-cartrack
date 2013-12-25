@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_api'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -20,11 +20,10 @@
 #include "emlrt.h"
 #include "blas.h"
 #include "rtwtypes.h"
-#include "omp.h"
 #include "mog_types.h"
 
 /* Function Declarations */
 extern const mxArray *emlrtMexFcnResolvedFunctionsInfo(void);
-extern void mog_api(const mxArray * const prhs[2], const mxArray *plhs[1]);
+extern void mog_api(const mxArray * const prhs[2], const mxArray *plhs[2]);
 #endif
 /* End of code generation (mog_api.h) */

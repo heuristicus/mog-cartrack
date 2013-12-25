@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog'
  *
- * C source code generated on: Wed Dec 25 11:02:59 2013
+ * C source code generated on: Wed Dec 25 12:08:53 2013
  *
  */
 
@@ -58,18 +58,6 @@ struct emxArray_int32_T
 #define typedef_emxArray_int32_T
 typedef struct emxArray_int32_T emxArray_int32_T;
 #endif /*typedef_emxArray_int32_T*/
-#ifndef struct_emxArray_int32_T_1
-#define struct_emxArray_int32_T_1
-struct emxArray_int32_T_1
-{
-    int32_T data[1];
-    int32_T size[1];
-};
-#endif /*struct_emxArray_int32_T_1*/
-#ifndef typedef_emxArray_int32_T_1
-#define typedef_emxArray_int32_T_1
-typedef struct emxArray_int32_T_1 emxArray_int32_T_1;
-#endif /*typedef_emxArray_int32_T_1*/
 #ifndef struct_emxArray_int32_T_3
 #define struct_emxArray_int32_T_3
 struct emxArray_int32_T_3
@@ -121,6 +109,21 @@ struct emxArray_struct_T
 #define typedef_emxArray_struct_T
 typedef struct emxArray_struct_T emxArray_struct_T;
 #endif /*typedef_emxArray_struct_T*/
+#ifndef struct_emxArray_uint8_T
+#define struct_emxArray_uint8_T
+struct emxArray_uint8_T
+{
+    uint8_T *data;
+    int32_T *size;
+    int32_T allocatedSize;
+    int32_T numDimensions;
+    boolean_T canFreeData;
+};
+#endif /*struct_emxArray_uint8_T*/
+#ifndef typedef_emxArray_uint8_T
+#define typedef_emxArray_uint8_T
+typedef struct emxArray_uint8_T emxArray_uint8_T;
+#endif /*typedef_emxArray_uint8_T*/
 
 #endif
 /* End of code generation (mog_types.h) */
