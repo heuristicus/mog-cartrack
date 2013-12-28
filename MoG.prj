@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-project plugin="plugin.matlabcoder" plugin-version="R2013a">
-  <configuration target="target.matlab.coder" target-name="MEX, C, and C++ Code Generation" name="MoG" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" file="C:\Users\Carlos\Documents\GitHub\mog-cartrack\MoG.prj" build-checksum="801834219">
+  <configuration target="target.matlab.coder" target-name="MEX, C, and C++ Code Generation" name="MoG" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" file="C:\Users\Carlos\Documents\GitHub\mog-cartrack\MoG.prj" build-checksum="3959697810">
     <profile key="profile.mex">
       <param.MergeInstrumentationResults>false</param.MergeInstrumentationResults>
       <param.BuiltInstrumentedMex>false</param.BuiltInstrumentedMex>
@@ -299,10 +299,10 @@
         <param.UseECoderFeatures />
       </unset>
     </profile>
-    <param.outputfile>${PROJECT_ROOT}\mog_mex.mexw64</param.outputfile>
+    <param.outputfile>${PROJECT_ROOT}\mog_batch_mex.mexw64</param.outputfile>
     <param.version>R2012a</param.version>
     <param.HasECoderFeatures>true</param.HasECoderFeatures>
-    <param.mex.mainhtml>C:\Users\Carlos\Documents\GitHub\mog-cartrack\codegen\mex\mog\html\index.html</param.mex.mainhtml>
+    <param.mex.mainhtml>C:\Users\Carlos\Documents\GitHub\mog-cartrack\codegen\mex\mog_batch\html\index.html</param.mex.mainhtml>
     <param.grt.mainhtml />
     <param.CallGeneratedCodeFromTest>true</param.CallGeneratedCodeFromTest>
     <param.DefaultTestFile />
@@ -311,8 +311,8 @@
     <param.AutoInferUseUnboundedSize>false</param.AutoInferUseUnboundedSize>
     <param.AutoInferVariableSizeThreshold>1024</param.AutoInferVariableSizeThreshold>
     <param.AutoInferUnboundedSizeThreshold>2048</param.AutoInferUnboundedSizeThreshold>
-    <param.mex.outputfile>mog_mex</param.mex.outputfile>
-    <param.grt.outputfile>mog</param.grt.outputfile>
+    <param.mex.outputfile>mog_batch_mex</param.mex.outputfile>
+    <param.grt.outputfile>mog_batch</param.grt.outputfile>
     <param.artifact>option.target.artifact.mex</param.artifact>
     <param.FixedPointTypeProposalMode>option.FixedPointTypeProposalMode.ProposeFractionLengths</param.FixedPointTypeProposalMode>
     <param.DefaultProposedFixedPointType>numerictype([],16,12)</param.DefaultProposedFixedPointType>
@@ -400,8 +400,8 @@
       <param.DefaultFixedPointSignedness />
     </unset>
     <fileset.entrypoints>
-      <file value="${PROJECT_ROOT}\mog.m" custom-data-expanded="false">
-        <Inputs fileName="mog.m" functionName="mog">
+      <file value="${PROJECT_ROOT}\mog_batch.m" custom-data-expanded="false">
+        <Inputs fileName="mog_batch.m" functionName="mog_batch">
           <Input Name="image">
             <Class>double</Class>
             <Size>:inf x :inf x :inf</Size>
@@ -432,7 +432,7 @@
     <fileset.testbench />
     <fileset.package />
     <build-deliverables>
-      <file name="mog_mex.mexw64" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" optional="false">C:\Users\Carlos\Documents\GitHub\mog-cartrack\mog_mex.mexw64</file>
+      <file name="mog_batch_mex.mexw64" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" optional="false">C:\Users\Carlos\Documents\GitHub\mog-cartrack\mog_batch_mex.mexw64</file>
     </build-deliverables>
     <workflow />
     <matlab>
