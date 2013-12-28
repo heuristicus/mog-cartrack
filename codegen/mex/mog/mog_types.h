@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog'
  *
- * C source code generated on: Wed Dec 25 12:08:53 2013
+ * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
@@ -70,6 +70,18 @@ struct emxArray_int32_T_3
 #define typedef_emxArray_int32_T_3
 typedef struct emxArray_int32_T_3 emxArray_int32_T_3;
 #endif /*typedef_emxArray_int32_T_3*/
+#ifndef struct_emxArray_real_T_3
+#define struct_emxArray_real_T_3
+struct emxArray_real_T_3
+{
+    real_T data[3];
+    int32_T size[1];
+};
+#endif /*struct_emxArray_real_T_3*/
+#ifndef typedef_emxArray_real_T_3
+#define typedef_emxArray_real_T_3
+typedef struct emxArray_real_T_3 emxArray_real_T_3;
+#endif /*typedef_emxArray_real_T_3*/
 #ifndef struct_emxArray_real_T
 #define struct_emxArray_real_T
 struct emxArray_real_T

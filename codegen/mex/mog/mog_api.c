@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_api'
  *
- * C source code generated on: Wed Dec 25 12:08:53 2013
+ * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
@@ -14,26 +14,26 @@
 #include "mog_emxutil.h"
 
 /* Variable Definitions */
-static emlrtRTEInfo k_emlrtRTEI = { 1, 1, "mog_api", "" };
+static emlrtRTEInfo m_emlrtRTEI = { 1, 1, "mog_api", "" };
 
 /* Function Declarations */
 static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
   *parentId, emxArray_real_T *y);
 static const mxArray *b_emlrt_marshallOut(emxArray_real_T *u);
-static void b_info_helper(ResolvedFunctionInfo info[161]);
+static void b_info_helper(ResolvedFunctionInfo info[167]);
 static real_T c_emlrt_marshallIn(const mxArray *count, const char_T *identifier);
 static const mxArray *c_emlrt_marshallOut(emxArray_uint8_T *u);
-static void c_info_helper(ResolvedFunctionInfo info[161]);
+static void c_info_helper(ResolvedFunctionInfo info[167]);
 static real_T d_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
   *parentId);
 static void e_emlrt_marshallIn(const mxArray *src, const emlrtMsgIdentifier
   *msgId, emxArray_real_T *ret);
 static void emlrt_marshallIn(const mxArray *image, const char_T *identifier,
   emxArray_real_T *y);
-static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[161]);
+static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[167]);
 static real_T f_emlrt_marshallIn(const mxArray *src, const emlrtMsgIdentifier
   *msgId);
-static void info_helper(ResolvedFunctionInfo info[161]);
+static void info_helper(ResolvedFunctionInfo info[167]);
 
 /* Function Definitions */
 static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
@@ -46,18 +46,18 @@ static void b_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
 static const mxArray *b_emlrt_marshallOut(emxArray_real_T *u)
 {
   const mxArray *y;
-  static const int32_T iv7[2] = { 0, 0 };
+  static const int32_T iv6[2] = { 0, 0 };
 
   const mxArray *m4;
   y = NULL;
-  m4 = mxCreateNumericArray(2, (int32_T *)&iv7, mxDOUBLE_CLASS, mxREAL);
+  m4 = mxCreateNumericArray(2, (int32_T *)&iv6, mxDOUBLE_CLASS, mxREAL);
   mxSetData((mxArray *)m4, (void *)u->data);
   mxSetDimensions((mxArray *)m4, u->size, 2);
   emlrtAssign(&y, m4);
   return y;
 }
 
-static void b_info_helper(ResolvedFunctionInfo info[161])
+static void b_info_helper(ResolvedFunctionInfo info[167])
 {
   info[64].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/blas/refblas/eml_refblas_xgemm.m";
@@ -585,65 +585,66 @@ static void b_info_helper(ResolvedFunctionInfo info[161])
   info[120].mFileTimeHi = 0U;
   info[121].context =
     "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/update.m";
-  info[121].name = "all";
+  info[121].name = "sum";
   info[121].dominantType = "logical";
-  info[121].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/all.m";
-  info[121].fileTimeLo = 1286818834U;
+  info[121].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sum.m";
+  info[121].fileTimeLo = 1314736612U;
   info[121].fileTimeHi = 0U;
   info[121].mFileTimeLo = 0U;
   info[121].mFileTimeHi = 0U;
-  info[122].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/all.m";
-  info[122].name = "eml_all_or_any";
-  info[122].dominantType = "char";
+  info[122].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sum.m";
+  info[122].name = "isequal";
+  info[122].dominantType = "double";
   info[122].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
-  info[122].fileTimeLo = 1286818694U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isequal.m";
+  info[122].fileTimeLo = 1286818758U;
   info[122].fileTimeHi = 0U;
   info[122].mFileTimeLo = 0U;
   info[122].mFileTimeHi = 0U;
-  info[123].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
-  info[123].name = "isequal";
-  info[123].dominantType = "double";
+  info[123].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sum.m";
+  info[123].name = "eml_const_nonsingleton_dim";
+  info[123].dominantType = "logical";
   info[123].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isequal.m";
-  info[123].fileTimeLo = 1286818758U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_const_nonsingleton_dim.m";
+  info[123].fileTimeLo = 1286818696U;
   info[123].fileTimeHi = 0U;
   info[123].mFileTimeLo = 0U;
   info[123].mFileTimeHi = 0U;
   info[124].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
-  info[124].name = "eml_const_nonsingleton_dim";
+    "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/update.m";
+  info[124].name = "all";
   info[124].dominantType = "logical";
-  info[124].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_const_nonsingleton_dim.m";
-  info[124].fileTimeLo = 1286818696U;
+  info[124].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/all.m";
+  info[124].fileTimeLo = 1286818834U;
   info[124].fileTimeHi = 0U;
   info[124].mFileTimeLo = 0U;
   info[124].mFileTimeHi = 0U;
-  info[125].context =
-    "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/update.m";
-  info[125].name = "min";
-  info[125].dominantType = "double";
-  info[125].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
-  info[125].fileTimeLo = 1311255318U;
+  info[125].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/all.m";
+  info[125].name = "eml_all_or_any";
+  info[125].dominantType = "char";
+  info[125].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
+  info[125].fileTimeLo = 1286818694U;
   info[125].fileTimeHi = 0U;
   info[125].mFileTimeLo = 0U;
   info[125].mFileTimeHi = 0U;
-  info[126].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[126].name = "rdivide";
+  info[126].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
+  info[126].name = "isequal";
   info[126].dominantType = "double";
-  info[126].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  info[126].fileTimeLo = 1346510388U;
+  info[126].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isequal.m";
+  info[126].fileTimeLo = 1286818758U;
   info[126].fileTimeHi = 0U;
   info[126].mFileTimeLo = 0U;
   info[126].mFileTimeHi = 0U;
-  info[127].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[127].name = "sort";
-  info[127].dominantType = "double";
+  info[127].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_all_or_any.m";
+  info[127].name = "eml_const_nonsingleton_dim";
+  info[127].dominantType = "logical";
   info[127].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sort.m";
-  info[127].fileTimeLo = 1303146208U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_const_nonsingleton_dim.m";
+  info[127].fileTimeLo = 1286818696U;
   info[127].fileTimeHi = 0U;
   info[127].mFileTimeLo = 0U;
   info[127].mFileTimeHi = 0U;
@@ -663,335 +664,385 @@ static real_T c_emlrt_marshallIn(const mxArray *count, const char_T *identifier)
 static const mxArray *c_emlrt_marshallOut(emxArray_uint8_T *u)
 {
   const mxArray *y;
-  static const int32_T iv8[3] = { 0, 0, 0 };
+  static const int32_T iv7[3] = { 0, 0, 0 };
 
   const mxArray *m5;
   y = NULL;
-  m5 = mxCreateNumericArray(3, (int32_T *)&iv8, mxUINT8_CLASS, mxREAL);
+  m5 = mxCreateNumericArray(3, (int32_T *)&iv7, mxUINT8_CLASS, mxREAL);
   mxSetData((mxArray *)m5, (void *)u->data);
   mxSetDimensions((mxArray *)m5, u->size, 3);
   emlrtAssign(&y, m5);
   return y;
 }
 
-static void c_info_helper(ResolvedFunctionInfo info[161])
+static void c_info_helper(ResolvedFunctionInfo info[167])
 {
-  info[128].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sort.m";
-  info[128].name = "eml_sort";
-  info[128].dominantType = "double";
-  info[128].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
-  info[128].fileTimeLo = 1314736612U;
+  info[128].context =
+    "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/update.m";
+  info[128].name = "min";
+  info[128].dominantType = "logical";
+  info[128].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
+  info[128].fileTimeLo = 1311255318U;
   info[128].fileTimeHi = 0U;
   info[128].mFileTimeLo = 0U;
   info[128].mFileTimeHi = 0U;
-  info[129].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
-  info[129].name = "eml_assert_valid_dim";
-  info[129].dominantType = "double";
+  info[129].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum";
+  info[129].name = "eml_const_nonsingleton_dim";
+  info[129].dominantType = "logical";
   info[129].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_assert_valid_dim.m";
-  info[129].fileTimeLo = 1286818694U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_const_nonsingleton_dim.m";
+  info[129].fileTimeLo = 1286818696U;
   info[129].fileTimeHi = 0U;
   info[129].mFileTimeLo = 0U;
   info[129].mFileTimeHi = 0U;
-  info[130].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
+  info[130].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum";
   info[130].name = "eml_scalar_eg";
-  info[130].dominantType = "double";
+  info[130].dominantType = "logical";
   info[130].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
   info[130].fileTimeLo = 1286818796U;
   info[130].fileTimeHi = 0U;
   info[130].mFileTimeLo = 0U;
   info[130].mFileTimeHi = 0U;
-  info[131].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
-  info[131].name = "eml_sort_idx";
-  info[131].dominantType = "double";
-  info[131].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
-  info[131].fileTimeLo = 1305318004U;
+  info[131].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum_sub";
+  info[131].name = "isnan";
+  info[131].dominantType = "logical";
+  info[131].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isnan.m";
+  info[131].fileTimeLo = 1286818760U;
   info[131].fileTimeHi = 0U;
   info[131].mFileTimeLo = 0U;
   info[131].mFileTimeHi = 0U;
-  info[132].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
-  info[132].name = "eml_index_class";
-  info[132].dominantType = "";
-  info[132].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  info[132].fileTimeLo = 1323170578U;
+  info[132].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[132].name = "rdivide";
+  info[132].dominantType = "double";
+  info[132].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  info[132].fileTimeLo = 1346510388U;
   info[132].fileTimeHi = 0U;
   info[132].mFileTimeLo = 0U;
   info[132].mFileTimeHi = 0U;
-  info[133].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
-  info[133].name = "eml_size_ispow2";
-  info[133].dominantType = "coder.internal.indexInt";
+  info[133].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[133].name = "sort";
+  info[133].dominantType = "double";
   info[133].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_size_ispow2.m";
-  info[133].fileTimeLo = 1286818798U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sort.m";
+  info[133].fileTimeLo = 1303146208U;
   info[133].fileTimeHi = 0U;
   info[133].mFileTimeLo = 0U;
   info[133].mFileTimeHi = 0U;
-  info[134].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_size_ispow2.m";
-  info[134].name = "eml_unsigned_class";
-  info[134].dominantType = "char";
+  info[134].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sort.m";
+  info[134].name = "eml_sort";
+  info[134].dominantType = "double";
   info[134].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_unsigned_class.m";
-  info[134].fileTimeLo = 1323170580U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
+  info[134].fileTimeLo = 1314736612U;
   info[134].fileTimeHi = 0U;
   info[134].mFileTimeLo = 0U;
   info[134].mFileTimeHi = 0U;
-  info[135].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_unsigned_class.m";
-  info[135].name = "eml_index_class";
-  info[135].dominantType = "";
+  info[135].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
+  info[135].name = "eml_assert_valid_dim";
+  info[135].dominantType = "double";
   info[135].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  info[135].fileTimeLo = 1323170578U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_assert_valid_dim.m";
+  info[135].fileTimeLo = 1286818694U;
   info[135].fileTimeHi = 0U;
   info[135].mFileTimeLo = 0U;
   info[135].mFileTimeHi = 0U;
-  info[136].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
-  info[136].name = "eml_index_plus";
-  info[136].dominantType = "coder.internal.indexInt";
+  info[136].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
+  info[136].name = "eml_scalar_eg";
+  info[136].dominantType = "double";
   info[136].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
-  info[136].fileTimeLo = 1286818778U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
+  info[136].fileTimeLo = 1286818796U;
   info[136].fileTimeHi = 0U;
   info[136].mFileTimeLo = 0U;
   info[136].mFileTimeHi = 0U;
-  info[137].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
-  info[137].name = "eml_sort_le";
+  info[137].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort.m";
+  info[137].name = "eml_sort_idx";
   info[137].dominantType = "double";
   info[137].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m";
-  info[137].fileTimeLo = 1292190510U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
+  info[137].fileTimeLo = 1305318004U;
   info[137].fileTimeHi = 0U;
   info[137].mFileTimeLo = 0U;
   info[137].mFileTimeHi = 0U;
   info[138].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m!eml_sort_descending_le";
-  info[138].name = "eml_relop";
-  info[138].dominantType = "function_handle";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
+  info[138].name = "eml_index_class";
+  info[138].dominantType = "";
   info[138].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_relop.m";
-  info[138].fileTimeLo = 1342451182U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
+  info[138].fileTimeLo = 1323170578U;
   info[138].fileTimeHi = 0U;
   info[138].mFileTimeLo = 0U;
   info[138].mFileTimeHi = 0U;
   info[139].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m!eml_sort_descending_le";
-  info[139].name = "isnan";
-  info[139].dominantType = "double";
-  info[139].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isnan.m";
-  info[139].fileTimeLo = 1286818760U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
+  info[139].name = "eml_size_ispow2";
+  info[139].dominantType = "coder.internal.indexInt";
+  info[139].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_size_ispow2.m";
+  info[139].fileTimeLo = 1286818798U;
   info[139].fileTimeHi = 0U;
   info[139].mFileTimeLo = 0U;
   info[139].mFileTimeHi = 0U;
-  info[140].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[140].name = "cumsum";
-  info[140].dominantType = "double";
+  info[140].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_size_ispow2.m";
+  info[140].name = "eml_unsigned_class";
+  info[140].dominantType = "char";
   info[140].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m";
-  info[140].fileTimeLo = 1344472034U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_unsigned_class.m";
+  info[140].fileTimeLo = 1323170580U;
   info[140].fileTimeHi = 0U;
   info[140].mFileTimeLo = 0U;
   info[140].mFileTimeHi = 0U;
   info[141].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m";
-  info[141].name = "eml_nonsingleton_dim";
-  info[141].dominantType = "double";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_unsigned_class.m";
+  info[141].name = "eml_index_class";
+  info[141].dominantType = "";
   info[141].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_nonsingleton_dim.m";
-  info[141].fileTimeLo = 1307651242U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
+  info[141].fileTimeLo = 1323170578U;
   info[141].fileTimeHi = 0U;
   info[141].mFileTimeLo = 0U;
   info[141].mFileTimeHi = 0U;
   info[142].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_nonsingleton_dim.m";
-  info[142].name = "eml_index_class";
-  info[142].dominantType = "";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
+  info[142].name = "eml_index_plus";
+  info[142].dominantType = "coder.internal.indexInt";
   info[142].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  info[142].fileTimeLo = 1323170578U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
+  info[142].fileTimeLo = 1286818778U;
   info[142].fileTimeHi = 0U;
   info[142].mFileTimeLo = 0U;
   info[142].mFileTimeHi = 0U;
   info[143].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
-  info[143].name = "eml_matrix_vstride";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_idx.m";
+  info[143].name = "eml_sort_le";
   info[143].dominantType = "double";
   info[143].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_matrix_vstride.m";
-  info[143].fileTimeLo = 1286818788U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m";
+  info[143].fileTimeLo = 1292190510U;
   info[143].fileTimeHi = 0U;
   info[143].mFileTimeLo = 0U;
   info[143].mFileTimeHi = 0U;
   info[144].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
-  info[144].name = "eml_matrix_npages";
-  info[144].dominantType = "double";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m!eml_sort_descending_le";
+  info[144].name = "eml_relop";
+  info[144].dominantType = "function_handle";
   info[144].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_matrix_npages.m";
-  info[144].fileTimeLo = 1286818786U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_relop.m";
+  info[144].fileTimeLo = 1342451182U;
   info[144].fileTimeHi = 0U;
   info[144].mFileTimeLo = 0U;
   info[144].mFileTimeHi = 0U;
   info[145].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
-  info[145].name = "eml_index_class";
-  info[145].dominantType = "";
-  info[145].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  info[145].fileTimeLo = 1323170578U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_sort_le.m!eml_sort_descending_le";
+  info[145].name = "isnan";
+  info[145].dominantType = "double";
+  info[145].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isnan.m";
+  info[145].fileTimeLo = 1286818760U;
   info[145].fileTimeHi = 0U;
   info[145].mFileTimeLo = 0U;
   info[145].mFileTimeHi = 0U;
-  info[146].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
-  info[146].name = "eml_index_plus";
+  info[146].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[146].name = "cumsum";
   info[146].dominantType = "double";
   info[146].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
-  info[146].fileTimeLo = 1286818778U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m";
+  info[146].fileTimeLo = 1344472034U;
   info[146].fileTimeHi = 0U;
   info[146].mFileTimeLo = 0U;
   info[146].mFileTimeHi = 0U;
   info[147].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
-  info[147].name = "eml_index_plus";
-  info[147].dominantType = "coder.internal.indexInt";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m";
+  info[147].name = "eml_nonsingleton_dim";
+  info[147].dominantType = "double";
   info[147].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
-  info[147].fileTimeLo = 1286818778U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_nonsingleton_dim.m";
+  info[147].fileTimeLo = 1307651242U;
   info[147].fileTimeHi = 0U;
   info[147].mFileTimeLo = 0U;
   info[147].mFileTimeHi = 0U;
-  info[148].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[148].name = "min";
-  info[148].dominantType = "logical";
-  info[148].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
-  info[148].fileTimeLo = 1311255318U;
+  info[148].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_nonsingleton_dim.m";
+  info[148].name = "eml_index_class";
+  info[148].dominantType = "";
+  info[148].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
+  info[148].fileTimeLo = 1323170578U;
   info[148].fileTimeHi = 0U;
   info[148].mFileTimeLo = 0U;
   info[148].mFileTimeHi = 0U;
   info[149].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum";
-  info[149].name = "eml_const_nonsingleton_dim";
-  info[149].dominantType = "logical";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
+  info[149].name = "eml_matrix_vstride";
+  info[149].dominantType = "double";
   info[149].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_const_nonsingleton_dim.m";
-  info[149].fileTimeLo = 1286818696U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_matrix_vstride.m";
+  info[149].fileTimeLo = 1286818788U;
   info[149].fileTimeHi = 0U;
   info[149].mFileTimeLo = 0U;
   info[149].mFileTimeHi = 0U;
   info[150].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum";
-  info[150].name = "eml_scalar_eg";
-  info[150].dominantType = "logical";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
+  info[150].name = "eml_matrix_npages";
+  info[150].dominantType = "double";
   info[150].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
-  info[150].fileTimeLo = 1286818796U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_matrix_npages.m";
+  info[150].fileTimeLo = 1286818786U;
   info[150].fileTimeHi = 0U;
   info[150].mFileTimeLo = 0U;
   info[150].mFileTimeHi = 0U;
   info[151].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_min_or_max.m!eml_extremum_sub";
-  info[151].name = "isnan";
-  info[151].dominantType = "logical";
-  info[151].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/isnan.m";
-  info[151].fileTimeLo = 1286818760U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
+  info[151].name = "eml_index_class";
+  info[151].dominantType = "";
+  info[151].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
+  info[151].fileTimeLo = 1323170578U;
   info[151].fileTimeHi = 0U;
   info[151].mFileTimeLo = 0U;
   info[151].mFileTimeHi = 0U;
-  info[152].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[152].name = "match";
+  info[152].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
+  info[152].name = "eml_index_plus";
   info[152].dominantType = "double";
   info[152].resolved =
-    "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/match.m";
-  info[152].fileTimeLo = 1387965636U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
+  info[152].fileTimeLo = 1286818778U;
   info[152].fileTimeHi = 0U;
   info[152].mFileTimeLo = 0U;
   info[152].mFileTimeHi = 0U;
-  info[153].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
-  info[153].name = "find";
-  info[153].dominantType = "double";
-  info[153].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m";
-  info[153].fileTimeLo = 1303146206U;
+  info[153].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/cumsum.m!cumulativesum";
+  info[153].name = "eml_index_plus";
+  info[153].dominantType = "coder.internal.indexInt";
+  info[153].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
+  info[153].fileTimeLo = 1286818778U;
   info[153].fileTimeHi = 0U;
   info[153].mFileTimeLo = 0U;
   info[153].mFileTimeHi = 0U;
-  info[154].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[154].name = "eml_index_class";
-  info[154].dominantType = "";
-  info[154].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  info[154].fileTimeLo = 1323170578U;
+  info[154].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[154].name = "min";
+  info[154].dominantType = "logical";
+  info[154].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
+  info[154].fileTimeLo = 1311255318U;
   info[154].fileTimeHi = 0U;
   info[154].mFileTimeLo = 0U;
   info[154].mFileTimeHi = 0U;
-  info[155].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[155].name = "eml_scalar_eg";
+  info[155].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[155].name = "mtimes";
   info[155].dominantType = "double";
-  info[155].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
-  info[155].fileTimeLo = 1286818796U;
+  info[155].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  info[155].fileTimeLo = 1289519692U;
   info[155].fileTimeHi = 0U;
   info[155].mFileTimeLo = 0U;
   info[155].mFileTimeHi = 0U;
   info[156].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[156].name = "eml_int_forloop_overflow_check";
-  info[156].dominantType = "";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_int_forloop_overflow_check.m!eml_int_forloop_overflow_check_helper";
+  info[156].name = "intmin";
+  info[156].dominantType = "char";
   info[156].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_int_forloop_overflow_check.m";
-  info[156].fileTimeLo = 1346510340U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/intmin.m";
+  info[156].fileTimeLo = 1311255318U;
   info[156].fileTimeHi = 0U;
   info[156].mFileTimeLo = 0U;
   info[156].mFileTimeHi = 0U;
-  info[157].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[157].name = "eml_index_plus";
+  info[157].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[157].name = "sum";
   info[157].dominantType = "double";
-  info[157].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
-  info[157].fileTimeLo = 1286818778U;
+  info[157].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/sum.m";
+  info[157].fileTimeLo = 1314736612U;
   info[157].fileTimeHi = 0U;
   info[157].mFileTimeLo = 0U;
   info[157].mFileTimeHi = 0U;
-  info[158].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[158].name = "eml_scalar_eg";
-  info[158].dominantType = "logical";
+  info[158].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[158].name = "match";
+  info[158].dominantType = "double";
   info[158].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
-  info[158].fileTimeLo = 1286818796U;
+    "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/match.m";
+  info[158].fileTimeLo = 1388173977U;
   info[158].fileTimeHi = 0U;
   info[158].mFileTimeLo = 0U;
   info[158].mFileTimeHi = 0U;
-  info[159].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[159].name = "floor";
-  info[159].dominantType = "double";
-  info[159].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/floor.m";
-  info[159].fileTimeLo = 1343830380U;
+  info[159].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[159].name = "find";
+  info[159].dominantType = "logical";
+  info[159].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m";
+  info[159].fileTimeLo = 1303146206U;
   info[159].fileTimeHi = 0U;
   info[159].mFileTimeLo = 0U;
   info[159].mFileTimeHi = 0U;
   info[160].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
-  info[160].name = "min";
-  info[160].dominantType = "coder.internal.indexInt";
-  info[160].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
-  info[160].fileTimeLo = 1311255318U;
+  info[160].name = "eml_index_class";
+  info[160].dominantType = "";
+  info[160].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
+  info[160].fileTimeLo = 1323170578U;
   info[160].fileTimeHi = 0U;
   info[160].mFileTimeLo = 0U;
   info[160].mFileTimeHi = 0U;
+  info[161].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
+  info[161].name = "eml_scalar_eg";
+  info[161].dominantType = "logical";
+  info[161].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
+  info[161].fileTimeLo = 1286818796U;
+  info[161].fileTimeHi = 0U;
+  info[161].mFileTimeLo = 0U;
+  info[161].mFileTimeHi = 0U;
+  info[162].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
+  info[162].name = "eml_int_forloop_overflow_check";
+  info[162].dominantType = "";
+  info[162].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_int_forloop_overflow_check.m";
+  info[162].fileTimeLo = 1346510340U;
+  info[162].fileTimeHi = 0U;
+  info[162].mFileTimeLo = 0U;
+  info[162].mFileTimeHi = 0U;
+  info[163].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
+  info[163].name = "eml_index_plus";
+  info[163].dominantType = "double";
+  info[163].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_plus.m";
+  info[163].fileTimeLo = 1286818778U;
+  info[163].fileTimeHi = 0U;
+  info[163].mFileTimeLo = 0U;
+  info[163].mFileTimeHi = 0U;
+  info[164].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
+  info[164].name = "find";
+  info[164].dominantType = "double";
+  info[164].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m";
+  info[164].fileTimeLo = 1303146206U;
+  info[164].fileTimeHi = 0U;
+  info[164].mFileTimeLo = 0U;
+  info[164].mFileTimeHi = 0U;
+  info[165].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
+  info[165].name = "floor";
+  info[165].dominantType = "double";
+  info[165].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/floor.m";
+  info[165].fileTimeLo = 1343830380U;
+  info[165].fileTimeHi = 0U;
+  info[165].mFileTimeLo = 0U;
+  info[165].mFileTimeHi = 0U;
+  info[166].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elmat/find.m!eml_find";
+  info[166].name = "min";
+  info[166].dominantType = "coder.internal.indexInt";
+  info[166].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/datafun/min.m";
+  info[166].fileTimeLo = 1311255318U;
+  info[166].fileTimeHi = 0U;
+  info[166].mFileTimeLo = 0U;
+  info[166].mFileTimeHi = 0U;
 }
 
 static real_T d_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
@@ -1006,20 +1057,20 @@ static real_T d_emlrt_marshallIn(const mxArray *u, const emlrtMsgIdentifier
 static void e_emlrt_marshallIn(const mxArray *src, const emlrtMsgIdentifier
   *msgId, emxArray_real_T *ret)
 {
-  int32_T iv9[3];
+  int32_T iv8[3];
   boolean_T bv0[3];
   int32_T i;
-  int32_T iv10[3];
+  int32_T iv9[3];
   for (i = 0; i < 3; i++) {
-    iv9[i] = -1;
+    iv8[i] = -1;
     bv0[i] = TRUE;
   }
 
   emlrtCheckVsBuiltInR2012b(emlrtRootTLSGlobal, msgId, src, "double", FALSE, 3U,
-    iv9, bv0, iv10);
-  ret->size[0] = iv10[0];
-  ret->size[1] = iv10[1];
-  ret->size[2] = iv10[2];
+    iv8, bv0, iv9);
+  ret->size[0] = iv9[0];
+  ret->size[1] = iv9[1];
+  ret->size[2] = iv9[2];
   ret->allocatedSize = ret->size[0] * ret->size[1] * ret->size[2];
   ret->data = (real_T *)mxGetData(src);
   ret->canFreeData = FALSE;
@@ -1036,12 +1087,12 @@ static void emlrt_marshallIn(const mxArray *image, const char_T *identifier,
   emlrtDestroyArray(&image);
 }
 
-static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[161])
+static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[167])
 {
   const mxArray *y;
-  int32_T iv6[1];
-  int32_T i4;
-  ResolvedFunctionInfo *r8;
+  int32_T iv5[1];
+  int32_T i6;
+  ResolvedFunctionInfo *r5;
   const char * b_u;
   const mxArray *b_y;
   const mxArray *m3;
@@ -1054,54 +1105,54 @@ static const mxArray *emlrt_marshallOut(ResolvedFunctionInfo u[161])
   const mxArray *h_y;
   const mxArray *i_y;
   y = NULL;
-  iv6[0] = 161;
-  emlrtAssign(&y, mxCreateStructArray(1, iv6, 0, NULL));
-  for (i4 = 0; i4 < 161; i4++) {
-    r8 = &u[i4];
-    b_u = r8->context;
+  iv5[0] = 167;
+  emlrtAssign(&y, mxCreateStructArray(1, iv5, 0, NULL));
+  for (i6 = 0; i6 < 167; i6++) {
+    r5 = &u[i6];
+    b_u = r5->context;
     b_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&b_y, m3);
-    emlrtAddField(y, b_y, "context", i4);
-    b_u = r8->name;
+    emlrtAddField(y, b_y, "context", i6);
+    b_u = r5->name;
     c_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&c_y, m3);
-    emlrtAddField(y, c_y, "name", i4);
-    b_u = r8->dominantType;
+    emlrtAddField(y, c_y, "name", i6);
+    b_u = r5->dominantType;
     d_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&d_y, m3);
-    emlrtAddField(y, d_y, "dominantType", i4);
-    b_u = r8->resolved;
+    emlrtAddField(y, d_y, "dominantType", i6);
+    b_u = r5->resolved;
     e_y = NULL;
     m3 = mxCreateString(b_u);
     emlrtAssign(&e_y, m3);
-    emlrtAddField(y, e_y, "resolved", i4);
-    c_u = r8->fileTimeLo;
+    emlrtAddField(y, e_y, "resolved", i6);
+    c_u = r5->fileTimeLo;
     f_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&f_y, m3);
-    emlrtAddField(y, f_y, "fileTimeLo", i4);
-    c_u = r8->fileTimeHi;
+    emlrtAddField(y, f_y, "fileTimeLo", i6);
+    c_u = r5->fileTimeHi;
     g_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&g_y, m3);
-    emlrtAddField(y, g_y, "fileTimeHi", i4);
-    c_u = r8->mFileTimeLo;
+    emlrtAddField(y, g_y, "fileTimeHi", i6);
+    c_u = r5->mFileTimeLo;
     h_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&h_y, m3);
-    emlrtAddField(y, h_y, "mFileTimeLo", i4);
-    c_u = r8->mFileTimeHi;
+    emlrtAddField(y, h_y, "mFileTimeLo", i6);
+    c_u = r5->mFileTimeHi;
     i_y = NULL;
     m3 = mxCreateNumericMatrix(1, 1, mxUINT32_CLASS, mxREAL);
     *(uint32_T *)mxGetData(m3) = c_u;
     emlrtAssign(&i_y, m3);
-    emlrtAddField(y, i_y, "mFileTimeHi", i4);
+    emlrtAddField(y, i_y, "mFileTimeHi", i6);
   }
 
   return y;
@@ -1117,7 +1168,7 @@ static real_T f_emlrt_marshallIn(const mxArray *src, const emlrtMsgIdentifier
   return ret;
 }
 
-static void info_helper(ResolvedFunctionInfo info[161])
+static void info_helper(ResolvedFunctionInfo info[167])
 {
   info[0].context = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/mog.m";
   info[0].name = "repmat";
@@ -1540,7 +1591,7 @@ static void info_helper(ResolvedFunctionInfo info[161])
   info[44].dominantType = "double";
   info[44].resolved =
     "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/modelInit.m";
-  info[44].fileTimeLo = 1387965645U;
+  info[44].fileTimeLo = 1388173777U;
   info[44].fileTimeHi = 0U;
   info[44].mFileTimeLo = 0U;
   info[44].mFileTimeHi = 0U;
@@ -1583,7 +1634,7 @@ static void info_helper(ResolvedFunctionInfo info[161])
   info[49].dominantType = "double";
   info[49].resolved =
     "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/update.m";
-  info[49].fileTimeLo = 1387965616U;
+  info[49].fileTimeLo = 1388174805U;
   info[49].fileTimeHi = 0U;
   info[49].mFileTimeLo = 0U;
   info[49].mFileTimeHi = 0U;
@@ -1591,7 +1642,7 @@ static void info_helper(ResolvedFunctionInfo info[161])
   info[50].name = "match";
   info[50].dominantType = "double";
   info[50].resolved = "[E]C:/Users/Carlos/Documents/GitHub/mog-cartrack/match.m";
-  info[50].fileTimeLo = 1387965636U;
+  info[50].fileTimeLo = 1388173977U;
   info[50].fileTimeHi = 0U;
   info[50].mFileTimeLo = 0U;
   info[50].mFileTimeHi = 0U;
@@ -1725,7 +1776,7 @@ static void info_helper(ResolvedFunctionInfo info[161])
 const mxArray *emlrtMexFcnResolvedFunctionsInfo(void)
 {
   const mxArray *nameCaptureInfo;
-  ResolvedFunctionInfo info[161];
+  ResolvedFunctionInfo info[167];
   nameCaptureInfo = NULL;
   info_helper(info);
   b_info_helper(info);
@@ -1735,23 +1786,25 @@ const mxArray *emlrtMexFcnResolvedFunctionsInfo(void)
   return nameCaptureInfo;
 }
 
-void mog_api(const mxArray * const prhs[2], const mxArray *plhs[2])
+void mog_api(const mxArray * const prhs[3], const mxArray *plhs[2])
 {
   emxArray_real_T *image;
   emxArray_real_T *foreground;
   emxArray_uint8_T *background;
   real_T count;
+  real_T alpha;
   emlrtHeapReferenceStackEnterFcnR2012b(emlrtRootTLSGlobal);
-  c_emxInit_real_T(&image, 3, &k_emlrtRTEI, TRUE);
-  emxInit_real_T(&foreground, 2, &k_emlrtRTEI, TRUE);
-  emxInit_uint8_T(&background, 3, &k_emlrtRTEI, TRUE);
+  c_emxInit_real_T(&image, 3, &m_emlrtRTEI, TRUE);
+  emxInit_real_T(&foreground, 2, &m_emlrtRTEI, TRUE);
+  emxInit_uint8_T(&background, 3, &m_emlrtRTEI, TRUE);
 
   /* Marshall function inputs */
   emlrt_marshallIn(emlrtAlias(prhs[0]), "image", image);
   count = c_emlrt_marshallIn(emlrtAliasP(prhs[1]), "count");
+  alpha = c_emlrt_marshallIn(emlrtAliasP(prhs[2]), "alpha");
 
   /* Invoke the target function */
-  mog(image, count, foreground, background);
+  mog(image, count, alpha, foreground, background);
 
   /* Marshall function outputs */
   plhs[0] = b_emlrt_marshallOut(foreground);

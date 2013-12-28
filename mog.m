@@ -1,4 +1,4 @@
-function [foreground,background] = mog(image,count)
+function [foreground,background] = mog(image,count,alpha)
 %MOG Summary of this function goes here
 %   Detailed explanation goes here
 % Inputs:
@@ -43,7 +43,7 @@ for m=1:M
         end
         
         %Update model
-        [weight,mu,sigma] = update(X,prevWeight,prevMu,prevSigma);
+        [weight,mu,sigma] = update(X,prevWeight,prevMu,prevSigma,alpha);
         
         models(m,n).weight = zeros(K,1);
         models(m,n).mu = zeros(C,K);
@@ -61,8 +61,10 @@ for m=1:M
         [~,B] = min(sumB>T);
         bgIndexes = index(1:B);
         
-        %Set the background to the most likely gaussian
-        background(m,n,:) = models(m,n).mu(:,bgIndexes(1));
+        %Set the background to the weighted average of gaussians
+        bgWeights = weight(bgIndexes); %Bx1
+        bgMu = mu(:,bgIndexes); %CxB
+        background(m,n,:) = (bgMu*bgWeights)./(sum(bgWeights,1));
        
         %See if the pixel matches a background gaussian
         matchingIndex = find(match(X,mu,sigma));

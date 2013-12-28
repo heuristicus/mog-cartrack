@@ -10,7 +10,9 @@ function [D] = match(X, mu, sigma)
 
 %Compute Mahalanobis distance
 K = size(mu,2);
+D_TH = 6.25; %2.5^2;
+
 delta = X(:,ones(K, 1)) - mu; %CxK
-D = diag(delta'*delta)./sigma; %Mahalanobis distance^2 (faster)
+D = (diag(delta'*delta)./sigma)<D_TH; %Mahalanobis distance^2 (faster)
 end
 

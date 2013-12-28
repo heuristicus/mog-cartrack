@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog'
  *
- * C source code generated on: Wed Dec 25 12:08:53 2013
+ * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
@@ -23,6 +23,6 @@
 #include "mog_types.h"
 
 /* Function Declarations */
-extern void mog(const emxArray_real_T *image, real_T count, emxArray_real_T *foreground, emxArray_uint8_T *background);
+extern void mog(const emxArray_real_T *image, real_T count, real_T alpha, emxArray_real_T *foreground, emxArray_uint8_T *background);
 #endif
 /* End of code generation (mog.h) */

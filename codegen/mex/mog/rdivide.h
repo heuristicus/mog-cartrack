@@ -1,14 +1,14 @@
 /*
- * update.h
+ * rdivide.h
  *
- * Code generation for function 'update'
+ * Code generation for function 'rdivide'
  *
  * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
-#ifndef __UPDATE_H__
-#define __UPDATE_H__
+#ifndef __RDIVIDE_H__
+#define __RDIVIDE_H__
 /* Include files */
 #include <math.h>
 #include <stdlib.h>
@@ -23,6 +23,6 @@
 #include "mog_types.h"
 
 /* Function Declarations */
-extern void update(const emxArray_real_T *X, real_T weight[3], emxArray_real_T *mu, real_T sigma[3], real_T alpha);
+extern void rdivide(const emxArray_real_T *x, real_T y, emxArray_real_T *z);
 #endif
-/* End of code generation (update.h) */
+/* End of code generation (rdivide.h) */

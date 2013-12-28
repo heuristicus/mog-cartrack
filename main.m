@@ -2,6 +2,7 @@ function [] = main(videoFile)
 %MAIN Summary of this function goes here
 %   Detailed explanation goes here
 close all;
+
 profile clear; profile on;
 
 %Open pool
@@ -14,12 +15,13 @@ matlabpool open
 videoObj = VideoReader(videoFile);
 nFrames = videoObj.NumberOfFrames;
 
+ALPHA = 0.1;
 %For each frame
 for i=1:nFrames
     tic;
     frame = read(videoObj,i);
     %Compute foreground
-    [foreground,background] = mog_mex(double(frame),i);
+    [foreground,background] = mog_mex(double(frame),i,ALPHA);
     subplot(131)
     imshow(frame);
     title(sprintf('Frame %d',i));

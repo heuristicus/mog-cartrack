@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deployment-project plugin="plugin.matlabcoder" plugin-version="R2013a">
-  <configuration target="target.matlab.coder" target-name="MEX, C, and C++ Code Generation" name="MoG" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" file="C:\Users\Carlos\Documents\GitHub\mog-cartrack\MoG.prj" build-checksum="901719566">
+  <configuration target="target.matlab.coder" target-name="MEX, C, and C++ Code Generation" name="MoG" location="C:\Users\Carlos\Documents\GitHub\mog-cartrack" file="C:\Users\Carlos\Documents\GitHub\mog-cartrack\MoG.prj" build-checksum="801834219">
     <profile key="profile.mex">
       <param.MergeInstrumentationResults>false</param.MergeInstrumentationResults>
       <param.BuiltInstrumentedMex>false</param.BuiltInstrumentedMex>
@@ -411,6 +411,14 @@
             <Complex>false</Complex>
           </Input>
           <Input Name="count">
+            <Class>double</Class>
+            <Size>1 x 1</Size>
+            <Value />
+            <InitialValue />
+            <UserDefined>true</UserDefined>
+            <Complex>false</Complex>
+          </Input>
+          <Input Name="alpha">
             <Class>double</Class>
             <Size>1 x 1</Size>
             <Value />

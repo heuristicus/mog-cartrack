@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog'
  *
- * C source code generated on: Wed Dec 25 12:08:53 2013
+ * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
@@ -25,15 +25,15 @@ emlrtCTX emlrtRootTLSGlobal = NULL;
 static void mog_mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
   mxArray *outputs[2];
-  mxArray *inputs[2];
+  mxArray *inputs[3];
   int n = 0;
   int nOutputs = (nlhs < 1 ? 1 : nlhs);
   int nInputs = nrhs;
   /* Module initialization. */
   mog_initialize(&emlrtContextGlobal);
   /* Check for proper number of arguments. */
-  if (nrhs != 2) {
-    emlrtErrMsgIdAndTxt(emlrtRootTLSGlobal, "EMLRT:runTime:WrongNumberOfInputs", 5, mxINT32_CLASS, 2, mxCHAR_CLASS, 3, "mog");
+  if (nrhs != 3) {
+    emlrtErrMsgIdAndTxt(emlrtRootTLSGlobal, "EMLRT:runTime:WrongNumberOfInputs", 5, mxINT32_CLASS, 3, mxCHAR_CLASS, 3, "mog");
   } else if (nlhs > 2) {
     emlrtErrMsgIdAndTxt(emlrtRootTLSGlobal, "EMLRT:runTime:TooManyOutputArguments", 3, mxCHAR_CLASS, 3, "mog");
   }
@@ -78,9 +78,9 @@ mxArray *emlrtMexFcnProperties(void)
   mxArray *xResult = mxCreateStructMatrix(1,1,3,mexProperties);
   mxArray *xEntryPoints = mxCreateStructMatrix(1,1,4,epProperties);
   mxArray *xInputs = NULL;
-  xInputs = mxCreateLogicalMatrix(1, 2);
+  xInputs = mxCreateLogicalMatrix(1, 3);
   mxSetFieldByNumber(xEntryPoints, 0, 0, mxCreateString("mog"));
-  mxSetFieldByNumber(xEntryPoints, 0, 1, mxCreateDoubleScalar(2));
+  mxSetFieldByNumber(xEntryPoints, 0, 1, mxCreateDoubleScalar(3));
   mxSetFieldByNumber(xEntryPoints, 0, 2, mxCreateDoubleScalar(2));
   mxSetFieldByNumber(xEntryPoints, 0, 3, xInputs);
   mxSetFieldByNumber(xResult, 0, 0, mxCreateString("8.1.0.604 (R2013a)"));

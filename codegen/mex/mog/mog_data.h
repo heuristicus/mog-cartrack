@@ -3,7 +3,7 @@
  *
  * Code generation for function 'mog_data'
  *
- * C source code generated on: Wed Dec 25 12:08:53 2013
+ * C source code generated on: Sat Dec 28 10:10:59 2013
  *
  */
 
@@ -26,9 +26,8 @@
 extern const volatile char_T *emlrtBreakCheckR2012bFlagVar;
 extern emxArray_struct_T *models;
 extern boolean_T models_not_empty;
-extern emlrtRSInfo h_emlrtRSI;
-extern emlrtRSInfo n_emlrtRSI;
-extern emlrtRSInfo u_emlrtRSI;
+extern emlrtRSInfo i_emlrtRSI;
+extern emlrtRSInfo o_emlrtRSI;
 extern emlrtRSInfo v_emlrtRSI;
 extern emlrtRSInfo w_emlrtRSI;
 extern emlrtRSInfo x_emlrtRSI;
@@ -50,11 +49,17 @@ extern emlrtRSInfo nb_emlrtRSI;
 extern emlrtRSInfo ob_emlrtRSI;
 extern emlrtRSInfo pb_emlrtRSI;
 extern emlrtRSInfo qb_emlrtRSI;
+extern emlrtRSInfo rb_emlrtRSI;
+extern emlrtRSInfo ub_emlrtRSI;
+extern emlrtRSInfo vb_emlrtRSI;
+extern emlrtRSInfo wb_emlrtRSI;
 extern emlrtMCInfo emlrtMCI;
 extern emlrtMCInfo b_emlrtMCI;
 extern emlrtMCInfo g_emlrtMCI;
 extern emlrtMCInfo h_emlrtMCI;
+extern emlrtMCInfo i_emlrtMCI;
+extern emlrtMCInfo j_emlrtMCI;
 extern emlrtRTEInfo d_emlrtRTEI;
-extern emlrtRTEInfo n_emlrtRTEI;
+extern emlrtRTEInfo p_emlrtRTEI;
 #endif
 /* End of code generation (mog_data.h) */

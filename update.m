@@ -1,4 +1,4 @@
-function [weight, mu, sigma] = update(X, weight, mu, sigma)
+function [weight, mu, sigma] = update(X, weight, mu, sigma,alpha)
 %UPDATE Summary of this function goes here
 %   Detailed explanation goes here
 % Inputs:
@@ -14,14 +14,11 @@ function [weight, mu, sigma] = update(X, weight, mu, sigma)
 K = size(weight,1);
 C = size(X,1);
 
-ALPHA = 0.01;
-D_TH = 6.25; %2.5^2;
 SIGMA0 = 100;
-PRIOR_WEIGHT = ALPHA;
+PRIOR_WEIGHT = alpha;
 
 %Check which distribution matches the pixel value
 D = match(X,mu,sigma); %Kx1
-D_in = D<D_TH;
 
 %Update weights, mu and sigma
 % rho = zeros(K,1);
@@ -32,16 +29,15 @@ sigmaInv = sigmaInv(:,ones(K,1));
 det_Q = sigma.^C; %Kx1 (Sigma is a diagonal matrix with equal elements)
 X_rep = X(:,ones(K,1)); %CxK
 nu = X_rep-mu;
-rho = (ALPHA*(1./( (2*pi)^(C/2)*(det_Q).^.5))).*(exp(-0.5*sum((nu.^2).*sigmaInv',1)))';
-
-weight = weight + ALPHA*(D_in - weight);
+rho = (alpha*(1./( (2*pi)^(C/2)*(det_Q).^.5))).*(exp(-0.5*sum((nu.^2).*sigmaInv',1)))';
 rho_rep = (rho(:,ones(C,1)))'; %CxK
 
+weight = weight + alpha*(D - weight);
 mu = (1-rho_rep).*mu + rho_rep.*X_rep;
-
 sigma = (1-rho).*sigma + rho.*diag(nu'*nu);
 
-if all(D_in == 0) %No matches
+
+if all(sum(D(:))==0) %No matches, all D==0
    [value, index] = min(D);
    mu(:,index) = X;
    sigma(index)= SIGMA0;

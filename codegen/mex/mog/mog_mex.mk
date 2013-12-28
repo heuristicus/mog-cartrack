@@ -12,8 +12,10 @@ SRC_FILES =  \
 	mog_initialize.c \
 	mog_terminate.c \
 	mog.c \
+	rdivide.c \
 	update.c \
 	match.c \
+	sum.c \
 	mog_api.c \
 	mog_emxutil.c \
 	mog_mex.c
