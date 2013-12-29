@@ -28,6 +28,7 @@ for i = 1:200
     %blobAnalysis.AreaOutputPort = false;
     [area, centroid, bbox] = step(blobAnalysis, filteredForeground)
     bboxes = insertShape(frame, 'Rectangle', bbox, 'Color', 'green');
+    
     subplot(224)
     imshow(bboxes)
     pause(0.1)
