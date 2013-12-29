@@ -39,27 +39,21 @@ for i = 1:200
     % correctly distributed
     if i >= 125
         % define an array of particle filter objects
-%         pfs = pf_class.empty(size(bbox,1),0);
-%         for j = 1:size(bbox,1)
-%             pfs(j) = pf_class(10, eye(2), eye(2), centroid(j,:), bbox(j,:));
-%             % extract x y coordinates of particles and make circles by
-%             % adding a radius
-%             xy = pfs(j).S(1:2,:);
-%             circ = [xy;
-%                     ones(1,pfs(j).M) * 0.5]'
-%             size(circ)
-%             % draw a circle for each particle
-%             circ = insertShape(frame, 'Circle', circ, 'Color', 'red');
-% 
-%         end
-        pf = pf_class(10,eye(2),eye(2),centroid(1,:), bbox(1,:));
-        xy = pf.S(1:2,:);
-        bbox
-        centroid
-        circ = [xy;
-            ones(1,pfs(j).M) * 0.5]'
-        subplot(235)
+        pfs = pf_class.empty(size(bbox,1),0);
+        circ = [];
+        for j = 1:size(bbox,1)
+            j
+            pfs(j) = pf_class(10, eye(2), eye(2), centroid(j,:), bbox(j,:));
+            % extract x y coordinates of particles and make circles by
+            % adding a radius
+            xy = pfs(j).S(1:2,:);
+            tmpcirc = [xy;
+                       ones(1,pfs(j).M) * 0.5]';
+            circ = [circ;
+                    tmpcirc];
+        end
         circles = insertShape(frame, 'Circle', circ, 'Color', 'red');
+        subplot(235)
         imshow(circles)
     end
     

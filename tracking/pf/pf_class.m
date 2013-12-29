@@ -26,7 +26,6 @@ classdef pf_class
             % only initialise stuff if there are parameters passed. This is
             % required to create arrays of pf_class objects
             if nargin > 0
-                mu
                 % bbox is in a weird format sometimes - convert to double
                 bbox = double(bbox);
                 % Initialises the particle filter with the given number of
