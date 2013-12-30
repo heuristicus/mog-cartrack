@@ -15,7 +15,7 @@ K = size(weight,2);
 C = size(X,2);
 MN = size(X,1);
 
-SIGMA0 = 20;
+SIGMA0 = (30/255).^2;
 PRIOR_WEIGHT = alpha;
 
 %Check which distribution matches the pixel value
@@ -32,8 +32,8 @@ for k=1:K
    product = sum(nu.*nu,2);
    detQ = sigmaK.^C; %M*Nx1
    sigmaInv = 1./sigmaK; %M*Nx1
-   rho = alpha*M.*( 1./((2*pi)^(C/2)*detQ.^0.5 ) ).*exp(-0.5*sigmaInv.*product) ; %M*Nx1
-   rho_rep = repmat(rho,1,C);
+   rho = alpha;%*M.*( 1./((2*pi)^(C/2)*detQ.^0.5 ) ).*exp(-0.5*sigmaInv.*product) ; %M*Nx1
+   rho_rep = rho;%repmat(rho,1,C);
    
    weight(:,k) = (1-alpha)*weightK + alpha*M;
    mu(:,(k-1)*C+1:k*C) = (1-rho_rep).*muK + rho_rep.*X;

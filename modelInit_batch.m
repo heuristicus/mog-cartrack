@@ -12,7 +12,7 @@ function [weight,mu,sigma] = modelInit_batch(X,K)
 
 MN = size(X,1);
 
-SIGMA_DEF=20;
+SIGMA_DEF=(30/255).^2;
 
 weight = (1/K)*ones(MN,K); %M*NxK
 mu = repmat(X,1,K);  %M*Nx(C*K)
