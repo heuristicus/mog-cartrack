@@ -15,10 +15,10 @@ end
 %Read the video
 videoObj = vision.VideoFileReader(videoFile);
 
-foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...
+foregroundDetector = vision.ForegroundDetector('NumGaussians', 5, ...
     'NumTrainingFrames', 50);
-
-ALPHA = 0.01;
+%Get parameters
+parameters = mog_configure();
 i=0;
 %For each frame
 while ~isDone(videoObj)
@@ -26,7 +26,7 @@ while ~isDone(videoObj)
     tic;
     frame = step(videoObj);
     %Compute foreground
-    [foreground,background] = mog_batch(single(frame),i,ALPHA);
+    [foreground,background] = mog_batch(single(frame),i,parameters);
 %     profile viewer;
 %     pause;
     t = toc;
@@ -44,7 +44,7 @@ while ~isDone(videoObj)
     imshow(foreground2,'InitialMagnification','fit');
     title(sprintf('Foreground MATLAB (t= %f s)',t2));
 
-    pause;
+    pause(0.1);
     %TO DO: blob detection and vehicle tracking
 end
 
