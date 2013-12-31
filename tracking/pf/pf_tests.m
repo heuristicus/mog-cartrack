@@ -1,11 +1,40 @@
 %% test to see whether particles are correctly initialised within the bounding box specified
 close all
+clear all
 bbox = [1 5 25 5];
-pf = pf_class(100,eye(2),eye(2),[1 5]', bbox);
+pf = pf_class(10,eye(4),eye(2), bbox);
 
 figure
-xy = pf.S(1:2,:);
-plot(xy(1,:),xy(2,:),'+')
+plot(pf.S(1,:),pf.S(2,:),'+')
+
+%% test whether velocities are reasonably initialised
+close all
+clear all
+bbox = [1 5 25 5];
+pf = pf_class(10,eye(4),eye(2), bbox);
+
+figure
+quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
+
+%% test whether the prediction step correctly moves particles on the plane
+
+close all
+clear all
+bbox = [1 5 25 5];
+process_noise = diag([0.1 0.1 0.1 0.1]);
+pf = pf_class(10,process_noise,eye(2), bbox);
+
+figure
+quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
+axis([-50 50 -50 50])
+
+for i=1:20
+    pf.pf_predict(1);
+
+    quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
+    axis([-50 50 -50 50])
+    pause(0.1)
+end    
 
 %% test the particle filter initialisation with blob detection output
 close all
@@ -43,7 +72,7 @@ for i = 1:200
         circ = [];
         for j = 1:size(bbox,1)
             j
-            pfs(j) = pf_class(10, eye(2), eye(2), centroid(j,:), bbox(j,:));
+            pfs(j) = pf_class(10, eye(4), eye(2), bbox(j,:));
             % extract x y coordinates of particles and make circles by
             % adding a radius
             xy = pfs(j).S(1:2,:);

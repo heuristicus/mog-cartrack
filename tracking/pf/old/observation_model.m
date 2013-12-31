@@ -2,9 +2,9 @@
 % This function is the implementation of the observation model
 % The bearing should lie in the interval [-pi,pi)
 % Inputs:
-%           S           4XM
-%           W           2XN
-%           j           1X1
+%           S           4XM contains particles
+%           W           2XN contains positions of landmarks
+%           j           1X1 landmark index to be computed
 % Outputs:  
 %           h           2XM
 function h = observation_model(S,W,j)
