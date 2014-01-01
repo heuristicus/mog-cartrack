@@ -1,28 +1,36 @@
 %% test to see whether particles are correctly initialised within the bounding box specified
 close all
 clear all
-bbox = [1 5 25 5];
-pf = pf_class(10,eye(4),eye(2), bbox);
+bbox = [1 5 25 5]; 
+centroid = find_centroid(bbox);
+pf = pf_class(10,eye(4),eye(2), centroid, bbox);
 
 figure
+hold on
 plot(pf.S(1,:),pf.S(2,:),'+')
+plot(centroid(1), centroid(2), 'or')
+axis_box(bbox)
 
 %% test whether velocities are reasonably initialised
 close all
 clear all
 bbox = [1 5 25 5];
-pf = pf_class(10,eye(4),eye(2), bbox);
+centroid = find_centroid(bbox);
+pf = pf_class(10,eye(4),eye(2), centroid, bbox);
 
 figure
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
+axis_box(bbox)
 
 %% test whether the prediction step correctly moves particles on the plane
 
 close all
 clear all
 bbox = [1 5 25 5];
+centroid = find_centroid(bbox)
 process_noise = diag([0.1 0.1 0.1 0.1]);
-pf = pf_class(10,process_noise,eye(2), bbox);
+
+pf = pf_class(10,process_noise,eye(2), centroid, bbox);
 
 figure
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
@@ -35,6 +43,21 @@ for i=1:20
     axis([-50 50 -50 50])
     pause(0.1)
 end    
+
+%% test the step function and computation of centroid of the cloud
+close all
+clear all
+bbox = [1 5 5 5];
+centroid = find_centroid(bbox);
+process_noise = diag([0.1 0.1 0.1 0.1]);
+pf = pf_class(100,process_noise,eye(2), centroid, bbox);
+
+pf.pf_step(1,[10,3]);
+
+figure
+hold on
+quiver(pf.centroid(1), pf.centroid(2), pf.centroid(3), pf.centroid(4),'r')
+quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
 
 %% test the particle filter initialisation with blob detection output
 close all
