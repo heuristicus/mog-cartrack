@@ -47,17 +47,31 @@ end
 %% test the step function and computation of centroid of the cloud
 close all
 clear all
+
+measurements = [4.5,6.5;
+                6,5];
+nsteps = size(measurements, 1) + 1;
+
 bbox = [1 5 5 5];
 centroid = find_centroid(bbox);
 process_noise = diag([0.1 0.1 0.1 0.1]);
-pf = pf_class(100,process_noise,eye(2), centroid, bbox);
+measurement_noise = diag([0.1 0.1 0.1 0.1]);
+% first measurement is the centroid
+pf = pf_class(10,process_noise,measurement_noise, centroid, bbox);
 
-pf.pf_step(1,[10,3]);
-
+for i = 1:nsteps
+sprintf('=======step %d======', i)
 figure
 hold on
-quiver(pf.centroid(1), pf.centroid(2), pf.centroid(3), pf.centroid(4),'r')
+plot(pf.measurements(1,i), pf.measurements(2,i), 'go')
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
+quiver(pf.cloud_mean(1,i), pf.cloud_mean(2,i), pf.cloud_mean(3,i), pf.cloud_mean(4,i),'r')
+plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
+axis([-5 15 -5 15])
+
+% second measurement is the one received by the step function
+pf.pf_step(1,measurements(i,:));
+end
 
 %% test the particle filter initialisation with blob detection output
 close all
