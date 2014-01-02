@@ -76,8 +76,7 @@ classdef pf_class < handle
             matched_centroid
             last_measurement = obj.measurements(:,end)
             object_velocity = last_measurement - matched_centroid
-            measurement = [matched_centroid;
-                           object_velocity];
+            measurement = matched_centroid;
             
             obj.measurements = [obj.measurements matched_centroid];
             
@@ -107,6 +106,8 @@ classdef pf_class < handle
             obj.S = obj.S + noise;
         end
         function pf_weight(obj, measurement)
+            % !!! NOT WORKING !!!
+            
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
             normalisation = 1/(2*pi*sqrt(det(obj.Q)));
@@ -120,15 +121,32 @@ classdef pf_class < handle
             % As a result, nu contains simply the differences between each
             % particle and the measurement of the position of the object
             % that has been received
-            nu = msrep - obj.S(1:4,:);
+            nu = msrep - obj.S(1:2,:)
 
             p = diag(normalisation*exp(-0.5*nu'*(obj.Q\nu)))'
             p = p/sum(p)
             obj.S(5,:)=p;
         end
         function pf_resample(obj)
-            [val, ind] = max(obj.S(5,:))
-            obj.S(1:4,:) = repmat(obj.S(1:4,ind),1,obj.M);
+            % cumulative sum of the particle weights
+            cdf = cumsum(obj.S(5,:));
+            % initial random value between 0 and 1/M
+            r_0 = rand / obj.M;
+            % initialise a new particle matrix in which to store selected
+            % particles
+            new_particles = zeros(5,obj.M);
+            % loop over all particles and choose the particle to carry over
+            % to the next timestep
+            for m = 1 : obj.M
+                % the new particle is the one corresponding to the index
+                % in the cdf which exceeds the current random number
+                new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
+                % the random number is incremented by 1/M each time
+                r_0 = r_0 + 1/obj.M;
+            end
+            % the new particles are all given a uniform weight
+            new_particles(5,:) = 1/obj.M*ones(1,obj.M);
+            obj.S = new_particles;
         end
     end
 end

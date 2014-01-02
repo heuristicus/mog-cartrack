@@ -44,33 +44,39 @@ for i=1:20
     pause(0.1)
 end    
 
-%% test the step function and computation of centroid of the cloud
+%% overall test in a very simple environment
 close all
 clear all
 
-measurements = [4.5,6.5;
-                6,5];
+bbox = [0 0 2.5 2.5];
+centroid = find_centroid(bbox);
+x = linspace(centroid(1),10,10);
+y = linspace(centroid(2),10,10);
+
+measurements = [x' y'];
 nsteps = size(measurements, 1) + 1;
 
-bbox = [1 5 5 5];
-centroid = find_centroid(bbox);
-process_noise = diag([0.1 0.1 0.1 0.1]);
-measurement_noise = diag([0.1 0.1 0.1 0.1]);
-% first measurement is the centroid
-pf = pf_class(10,process_noise,measurement_noise, centroid, bbox);
 
+
+process_noise = diag([0.3 0.3 0.1 0.1]);
+%measurement_noise = diag([0.1 0.1 0.1 0.1]);
+measurement_noise = diag([0.1 0.1]);
+% first measurement is the centroid
+pf = pf_class(100,process_noise,measurement_noise, centroid, bbox);
+
+figure
 for i = 1:nsteps
 sprintf('=======step %d======', i)
-figure
+clf
 hold on
 plot(pf.measurements(1,i), pf.measurements(2,i), 'go')
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
 quiver(pf.cloud_mean(1,i), pf.cloud_mean(2,i), pf.cloud_mean(3,i), pf.cloud_mean(4,i),'r')
 plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
-axis([-5 15 -5 15])
-
+axis([0 max(x) 0 max(y)])
 % second measurement is the one received by the step function
 pf.pf_step(1,measurements(i,:));
+pause
 end
 
 %% test the particle filter initialisation with blob detection output
