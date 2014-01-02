@@ -6,19 +6,26 @@ close all;
 
 profile clear; profile on;
 
-%Open pool
-if matlabpool('size')>0
-    matlabpool close
-end
-% matlabpool open
-
 %Read the video
-videoObj = vision.VideoFileReader(videoFile);
+videoObj = vision.VideoFileReader(videoFile); %To get the frames (better for MoG)
+videoInfoObj = VideoReader(videoFile); %To get video info
+
+%Get video information
+nFrames = videoInfoObj.NumberOfFrames;
+img0 = read(videoInfoObj);
+M = size(img0,1);
+N = size(img0,2);
+C = size(img0,3);
 
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 5, ...
     'NumTrainingFrames', 50);
 %Get parameters
 parameters = mog_configure();
+K = parameters.K;
+
+%Allocate memory for all the models in a 3D array.
+timeModels = zeros(M*N,K+C*K+K,nFrames);
+
 i=0;
 %For each frame
 while ~isDone(videoObj)
@@ -26,9 +33,10 @@ while ~isDone(videoObj)
     tic;
     frame = step(videoObj);
     %Compute foreground
-    [foreground,background] = mog_batch(single(frame),i,parameters);
+    [foreground,background,model] = mog_batch(single(frame),parameters);
 %     profile viewer;
 %     pause;
+    timeModels(:,:,i) = model;
     t = toc;
 
     subplot(131)

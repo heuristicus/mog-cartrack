@@ -1,4 +1,4 @@
-function [weight,mu,sigma] = modelInit_batch(X,parameters)
+function [models] = modelInit_batch(X,parameters)
 %MODELINIT Summary of this function goes here
 %   Detailed explanation goes here
 % It inits a pixels model with the default parameters:
@@ -16,9 +16,10 @@ function [weight,mu,sigma] = modelInit_batch(X,parameters)
 %             -WEIGHT0          1x1
 %         
 % Outputs
-%         weight:             M*NxK
-%         mu:                 M*NxC*K
-%         sigma:              M*NxK
+%         models:             M*NxK+C*K+K
+%             -weight           M*NxK
+%             -mu               M*NxC*K
+%             -sigma            M*NxK
 
 MN = size(X,1);
 
@@ -29,5 +30,6 @@ weight = (1/K)*ones(MN,K); %M*NxK
 mu = repmat(X,1,K);  %M*NxC*K
 sigma = SIGMA0*ones(MN,K);  %M*NxK
 
+models = [weight,mu,sigma];
 end
 

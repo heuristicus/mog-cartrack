@@ -1,4 +1,4 @@
-function [foreground,background] = mog_batch(image,count,parameters)
+function [foreground,background,model] = mog_batch(image,parameters)
 %MOG Summary of this function goes here
 % Applies the Mixture of Gaussians algorithm to create the foreground
 % image. The update is done simultaneously for all the pixels, giving
@@ -15,15 +15,16 @@ function [foreground,background] = mog_batch(image,count,parameters)
 % Outputs
 %         foreground:         MxN
 %         background:         MxNxC
+%         models:             M*NxK+C*K+K
+%             -weight         M*NxK
+%             -mu             M*NxC*K
+%             -sigma          M*NxK
 persistent models;
 
 M = size(image,1);
 N = size(image,2);
 C = size(image,3);
-
-ALPHA = parameters.ALPHA;%Learning rate
-K = parameters.K;       %Number of Gaussians 5
-T = parameters.T;      %Background Threshold 0.7
+K = parameters.K;     
 
 % We store the models in a big matrix:
 %     K       C*K      K
@@ -37,23 +38,22 @@ wIndexes = 1:K;
 muIndexes= K+1:K+C*K;
 sigmaIndexes = K+C*K+1:K+C*K+K;
 
-if isempty(models)
-   models = zeros(M*N,K+C*K+K);
-end
+
 foreground = ones(M,N);
 background = zeros(M,N,C);
 
 %====Main vectorized process====   
 X = reshape(image,M*N,C); %M*NxC
 
+%Initialization (first frame)
+if isempty(models)
+   models = modelInit_batch(X,parameters); 
+end
+
 prevWeight = models(:,wIndexes);
 prevMu = models(:,muIndexes);
 prevSigma = models(:,sigmaIndexes);
 
-%Initialization (first frame)
-if count==1
-      [prevWeight, prevMu, prevSigma] = modelInit_batch(X,parameters); 
-end
 %Update model
 [weight,mu,sigma] = update_batch(X,prevWeight,prevMu,prevSigma,parameters);
 
@@ -78,10 +78,10 @@ matchMask = matchRow.*(matchCol<=B(matchRow));
 
 %Remove zeros
 matchMask = matchMask(matchMask~=0);
-
 %Set the foreground mask to 0 for the background pixels
 foreground(matchMask) = 0;
 
+%Other interesting output
 % background = uint8(background);
-
+model = models;
 end
