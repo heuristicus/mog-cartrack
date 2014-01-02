@@ -16,7 +16,7 @@ function [D,distances] = match_batch(X, mu, sigma)
 D_TH = 2.5^2; %^2 to compare without using sqrt
 
 distances = mahalanobis_batch(X,mu,sigma);
-[minV, minI] = min(distances./sigma,[],2); %We pick the Minimum distance Gaussian
+[minV, minI] = min(distances,[],2); %We pick the Minimum distance Gaussian
 D = minI.*(minV<D_TH); %Mahalanobis distance^2 (faster)
 %It outputs the index of the closest gaussian, given that it's close enough.
 end

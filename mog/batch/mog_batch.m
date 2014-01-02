@@ -71,7 +71,7 @@ models(:,sigmaIndexes) = sigma;
 
 %See if the pixel matches a background gaussian (the index must be less
 %than B)
-matchRes = match_batch(X,mu,sigma); %M*Nx1
+[matchRes,~] = match_batch(X,mu,sigma); %M*Nx1
 gaussCorresp = gaussIndexesSorted == repmat(matchRes,1,K); %M*NxK
 [matchRow, matchCol] = find(gaussCorresp);
 matchMask = matchRow.*(matchCol<=B(matchRow));

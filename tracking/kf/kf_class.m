@@ -11,6 +11,8 @@ classdef kf_class < handle
         mu
         % variance of the gaussian
         sigma
+        % number of frames without updating
+        noUpdateCounter;
     end
     
     methods
@@ -20,22 +22,37 @@ classdef kf_class < handle
             obj.R = process_model;
             obj.mu = mu;
             obj.sigma = sigma;
+            obj.noUpdateCounter=0;
         end
-        function kf_step(obj)
-            mu_bar = mu + u; % the predicted mean is the previous mean plus the control received
+        function kf_step(obj,measurements)
             
-            vtdt = u(1)/cos(mu(3)); % do not receive the velocity or the delta_t, so compute it from u(1)
+            %----Predict Step----
+            [mu_bar, sigma_bar] = kf_predict();
+%             mu_bar = mu + u; % the predicted mean is the previous mean plus the control received
+%             
+%             vtdt = u(1)/cos(mu(3)); % do not receive the velocity or the delta_t, so compute it from u(1)
+%             
+%             G = [1 0 -sin(mu(3))*vtdt;
+%                 0 1 cos(mu(3))*vtdt;
+%                 0 0 1];
+%             
+%             sigma_bar = G*sigma*G' + R;
             
-            G = [1 0 -sin(mu(3))*vtdt;
-                0 1 cos(mu(3))*vtdt;
-                0 0 1];
+            %----Check if available measurement---
+            % TODO
             
-            sigma_bar = G*sigma*G' + R;
-            
-            K=sigma_bar*H_bar'*inv(S_bar);
-            mu_bar = mu_bar+K*nu_bar;
-            sigma_bar = sigma_bar - K*H_bar*sigma_bar;
-            sigma_bar = (sigma_bar + sigma_bar')/2;
+            %----Update
+            if(available)
+                [obj.mu, obj.sigma] = update();
+%                 K=sigma_bar*H_bar'*inv(S_bar);
+%                 mu = mu_bar+K*nu_bar;
+%                 sigma = sigma_bar - K*H_bar*sigma_bar;
+%                 sigma = (sigma + sigma')/2;
+            else
+                obj.mu = mu_bar;
+                obj.sigma = sigma_bar;
+                obj.noUpdateCounter = obj.noUpdateCounter + 1;
+            end
         end
     end
     

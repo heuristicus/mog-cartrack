@@ -22,5 +22,6 @@ for k=1:K
     indexes = (k-1)*C+1:k*C;
     D(:,k) = sum(delta(:,indexes),2);
 end
+D = D./sigma;
 end
 

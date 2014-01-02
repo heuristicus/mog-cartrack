@@ -78,7 +78,7 @@ close all
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...
     'NumTrainingFrames', 1);
 
-videoReader = vision.VideoFileReader('visiontraffic.avi');
+videoReader = vision.VideoFileReader('viptraffic.avi');
 figure
 for i = 1:200
     i
@@ -91,10 +91,14 @@ for i = 1:200
         
     %Clean
     se = strel('square', 3);
-    filteredForeground = imopen(foreground, se);
+    filledForeground = imfill(imdilate(foreground,se),'holes');
+
+    filteredForeground = imopen(filledForeground, se);
     subplot(233)
     imshow(filteredForeground); title('Clean Foreground');
     
+    subplot(235)
+    imshow(filledForeground);title('Filled Foreground');
     %Extract blobs
     blobAnalysis = vision.BlobAnalysis('MinimumBlobArea', 150);
     %blobAnalysis.AreaOutputPort = false;
@@ -125,5 +129,5 @@ for i = 1:200
     
     subplot(234)
     imshow(bboxes)
-    pause(0.1)
+    pause
 end
