@@ -74,8 +74,9 @@ quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
 quiver(pf.cloud_mean(1,i), pf.cloud_mean(2,i), pf.cloud_mean(3,i), pf.cloud_mean(4,i),'r')
 plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
 axis([0 max(x) 0 max(y)])
-% second measurement is the one received by the step function
-pf.pf_step(1,measurements(i,:));
+% the filter is initialised using the first measurement, so use the i+1th
+% measurement at each timestep
+pf.pf_step(1,measurements(i+1,:));
 pause(1)
 end
 

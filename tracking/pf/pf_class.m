@@ -15,6 +15,8 @@ classdef pf_class < handle
         R 
         % Measurement noise model
         Q
+        % noise model inverse
+        Qinv
         % number of particles
         M
         % size of the state vector
@@ -42,6 +44,7 @@ classdef pf_class < handle
                 % height.
                 obj.R = process_model;
                 obj.Q = measurement_model;
+                obj.Qinv = inv(measurement_model);
                 obj.N = 4; % four state components, x, y, and velocities in those directions
                 obj.M = num_particles;
                 % initialise particles randomly within the bounding box
@@ -121,11 +124,8 @@ classdef pf_class < handle
             % particle and the measurement of the position of the object
             % that has been received
             nu = msrep - obj.S(1:4,:);
-            [val, ind] = min(sum(nu,1))
-            nu(:,ind)
             
-            
-            p = diag(normalisation*exp(-0.5*nu'*(obj.Q\nu)))';
+            p = diag(normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
             p = p/sum(p);
             obj.S(5,:)=p;
         end
