@@ -56,7 +56,9 @@ classdef pf_class < handle
                     centroid = centroid';
                 end
                 centroid
-                obj.measurements = centroid;
+                % initialise the object with zero initial velocity
+                % CHANGE THIS FOR BETTER ACCURACY
+                obj.measurements = [centroid; 0; 0];
                 obj.cloud_mean = mean(obj.S(1:4,:), 2);
             end
         end
@@ -73,12 +75,12 @@ classdef pf_class < handle
             if size(matched_centroid,2) ~= 1
                 matched_centroid = matched_centroid';
             end
-            matched_centroid
-            last_measurement = obj.measurements(:,end)
-            object_velocity = last_measurement - matched_centroid
-            measurement = matched_centroid;
+            last_measurement = obj.measurements(:,end);
+            object_velocity = last_measurement(1:2) - matched_centroid;
+            measurement = [matched_centroid;
+                           object_velocity]
             
-            obj.measurements = [obj.measurements matched_centroid];
+            obj.measurements = [obj.measurements measurement];
             
             obj.pf_weight(measurement)
             obj.pf_resample()
@@ -106,25 +108,25 @@ classdef pf_class < handle
             obj.S = obj.S + noise;
         end
         function pf_weight(obj, measurement)
-            % !!! NOT WORKING !!!
-            
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
             normalisation = 1/(2*pi*sqrt(det(obj.Q)));
             % repeat the measurement made so that all particles can be
             % compared
             msrep = repmat(measurement,1,obj.M);
-            p = zeros(1,obj.M);
             
             % each particle is attempting to represent the motion of the
             % object, and so we do not have any observation model (?)
             % As a result, nu contains simply the differences between each
             % particle and the measurement of the position of the object
             % that has been received
-            nu = msrep - obj.S(1:2,:)
-
-            p = diag(normalisation*exp(-0.5*nu'*(obj.Q\nu)))'
-            p = p/sum(p)
+            nu = msrep - obj.S(1:4,:);
+            [val, ind] = min(sum(nu,1))
+            nu(:,ind)
+            
+            
+            p = diag(normalisation*exp(-0.5*nu'*(obj.Q\nu)))';
+            p = p/sum(p);
             obj.S(5,:)=p;
         end
         function pf_resample(obj)
@@ -146,6 +148,7 @@ classdef pf_class < handle
             end
             % the new particles are all given a uniform weight
             new_particles(5,:) = 1/obj.M*ones(1,obj.M);
+            % put the new particles into the object
             obj.S = new_particles;
         end
     end

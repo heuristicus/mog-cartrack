@@ -58,9 +58,9 @@ nsteps = size(measurements, 1) + 1;
 
 
 
-process_noise = diag([0.3 0.3 0.1 0.1]);
-%measurement_noise = diag([0.1 0.1 0.1 0.1]);
-measurement_noise = diag([0.1 0.1]);
+process_noise = diag([0.3 0.3 0.2 0.2]);
+measurement_noise = diag([0.1 0.1 1 1]);
+%measurement_noise = diag([0.1 0.1]);
 % first measurement is the centroid
 pf = pf_class(100,process_noise,measurement_noise, centroid, bbox);
 
@@ -76,7 +76,7 @@ plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
 axis([0 max(x) 0 max(y)])
 % second measurement is the one received by the step function
 pf.pf_step(1,measurements(i,:));
-pause
+pause(1)
 end
 
 %% test the particle filter initialisation with blob detection output

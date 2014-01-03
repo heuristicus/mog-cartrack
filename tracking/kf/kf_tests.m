@@ -1,6 +1,3 @@
-%% test kalman filter initialisation
-
-
 %% overall test in a very simple environment
 close all
 clear all
