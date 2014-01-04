@@ -21,10 +21,22 @@ classdef pf_class < handle
         M
         % size of the state vector
         N
-        % keep track of the measurements received over time
+        % keep track of the measurements received over time. There could be
+        % a different number of measurements each timestep, so this is a
+        % cell array where the measurements for each timestep are one cell,
+        % and each measurement is a column of the matrix in the form [x y xvel yvel]'
+        % the values xvel and yvel are not measured directly but are
+        % computed from the previous measurement and the one received in
+        % the current timestep
         measurements
-        % keep track of the cloud means of the particle cloud
-        cloud_mean
+        % keep track of the cluster centres in the cloud. There could be a
+        % different number of centres each timestep, so this is a cell
+        % array. Each cell contains the cluster means for a given timestep
+        % in the form [x y xvel yvel; ...]' (columns correspond to
+        % clusters)
+        cluster_means
+        % keep track of the number of steps taken
+        stepnum
     end
     
     methods
@@ -39,7 +51,7 @@ classdef pf_class < handle
             % required to create arrays of pf_class objects
             if nargin > 0
                 % define the particle limit if one is not passed. Use 0.1
-                % unless there are more than 10 measurements
+                % unless there care more than 10 measurements
                 if nargin < 6
                     particle_min_limit = min(0.1, 1/size(centroids,1));
                 end
@@ -78,15 +90,26 @@ classdef pf_class < handle
                         rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
                         randn(1,nparticles); % random velocity in x
                         randn(1,nparticles); % random velocity in y
-                        ones(1,nparticles) * 1/nparticles];
+                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
                     obj.S = [obj.S initpart];
                 end
-                obj.S
                 % initialise the object with zero initial velocity
-                obj.measurements = [centroids zeros(size(centroids,1),2)];
+                obj.measurements = {[centroids zeros(size(centroids,1),2)]'};
+                % compute the cluster centres and the particles belonging
+                % to them
+                [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
+                % compute the mean of each cluster
+                mn = [];
+                for i=1:size(centroids,1)
+                   cluster_particles = obj.S(1:4,idx==i);
+                   mn = [mn mean(cluster_particles,2)];
+                end
+                obj.cluster_means = {mn};
+                obj.stepnum = 1;
             end
         end
         function pf_step(obj, dt, centroids)
+            obj.stepnum = obj.stepnum+ 1;
             % predict the motion of the particles based on their current
             % velocities and the time elapsed
             obj.pf_predict(dt);
@@ -98,8 +121,7 @@ classdef pf_class < handle
             % measurements which are not yet represented in the filter.
             [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1))
             
-            
-            obj.cloud_mean = [obj.cloud_mean mean(obj.S(1:4,:),2)];
+            obj.cluster_means(1,obj.stepnum) = {[centres]};
             
             % !!!!!THIS IS NOT CORRECT!!!!!
             % need to extract the centroid which corresponds to the one
@@ -113,14 +135,10 @@ classdef pf_class < handle
             measurement = [matched_centroid;
                            object_velocity]
             
-            obj.measurements = [obj.measurements measurement];
+            obj.measurements{1,obj.stepnum} = measurement;
             
             obj.pf_weight(measurement)
             obj.pf_resample()
-            
-            % !!!!!THIS IS NOT CORRECT!!!!!
-            
-            
         end
         function pf_predict(obj, dt)
             % Use this to predict the next state for each particle based on

@@ -69,9 +69,10 @@ for i = 1:nsteps
 sprintf('=======step %d======', i)
 clf
 hold on
-plot(pf.measurements(1,i), pf.measurements(2,i), 'go')
+pf.measurements
+plot(pf.measurements{1,i}(1), pf.measurements{1,i}(2), 'go')
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
-quiver(pf.cloud_mean(1,i), pf.cloud_mean(2,i), pf.cloud_mean(3,i), pf.cloud_mean(4,i),'r')
+quiver(pf.cluster_means{1,i}(1), pf.cluster_means{1,i}(2), pf.cluster_means{1,i}(3), pf.cluster_means{1,i}(4),'r')
 plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
 axis([0 max(x) 0 max(y)])
 % the filter is initialised using the first measurement, so use the i+1th
@@ -108,12 +109,19 @@ measurements = find_centroid(bboxes);
 process_noise = diag([0.3 0.3 0.2 0.2]);
 measurement_noise = diag([0.1 0.1 1 1]);
 
-pf = pf_class(200, process_noise, measurement_noise, measurements, bboxes);
+pf = pf_class(50, process_noise, measurement_noise, measurements, bboxes);
 
 figure
 hold on
 plot(pf.S(1,:),pf.S(2,:),'+')
-axis([-10 10 -10 10])
+for i=1:size(bboxes,1)
+    %                 row------|
+    %         timestep------v  v v----------column
+    % plot(pf.cluster_means{1}(i,1),pf.cluster_means{1}(i,2),'ro')
+    plot(pf.cluster_means{1}(1,i),pf.cluster_means{1}(2,i),'ro')
+    quiver(pf.cluster_means{1}(1,i), pf.cluster_means{1}(2,i), pf.cluster_means{1}(3,i), pf.cluster_means{1}(4,i),'r')
+end
+%axis([-10 10 -10 10])
 
 %% test the particle filter initialisation with blob detection output
 close all
