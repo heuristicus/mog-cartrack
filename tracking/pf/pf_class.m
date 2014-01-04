@@ -28,15 +28,24 @@ classdef pf_class < handle
     end
     
     methods
-        function obj=pf_class(num_particles, process_model, measurement_model, centroid, bbox)
+        function obj=pf_class(num_particles, process_model, measurement_model, centroids, bboxes, particle_min_limit)
             % particle filter constructor. Process model should be a 4x4
             % matrix, measurement model should be a ? matrix.
+            % particle_min_limit is the minimum percentage of the total
+            % number of particles that can be assigned to any single
+            % measurement. Its value should be between 0 and 1.
             
             % only initialise stuff if there are parameters passed. This is
             % required to create arrays of pf_class objects
             if nargin > 0
+                % define the particle limit if one is not passed. Use 0.1
+                % unless there are more than 10 measurements
+                if nargin < 6
+                    particle_min_limit = min(0.1, 1/size(centroids,1));
+                end
+                                
                 % bbox is in a weird format sometimes - convert to double
-                bbox = double(bbox);
+                bboxes = double(bboxes);
                 % Initialises the particle filter with the given number of
                 % particles and the given process models. Particles are
                 % initialised within the given bounding box bbox, which is
@@ -47,28 +56,49 @@ classdef pf_class < handle
                 obj.Qinv = inv(measurement_model);
                 obj.N = 4; % four state components, x, y, and velocities in those directions
                 obj.M = num_particles;
-                % initialise particles randomly within the bounding box
-                % specified
-                obj.S = [rand(1,obj.M) * bbox(3) + bbox(1);
-                         rand(1,obj.M) * bbox(4) + bbox(2);
-                         randn(1,obj.M); % random velocity in x
-                         randn(1,obj.M); % random velocity in y
-                         ones(1,obj.M) * 1/obj.M];
-                     centroid
-                if size(centroid, 2) ~= 1
-                    centroid = centroid';
+                
+                % Initialise particles randomly based on the measurements
+                % received and their corresponding bboxes. Currently, the
+                % number of particles assigned to each box is proportional
+                % to its size, with a limit on the minimum number assigned
+                box_areas = prod(bboxes(:,3:4),2); % area = width * height
+                total_box_area = sum(box_areas);
+                box_proportions = box_areas/total_box_area;
+                
+                remaining_particles = obj.M;
+                % define the limit on the minimum number of particles
+                min_particles = particle_min_limit * obj.M;
+                for i=1:size(centroids,1)
+                    % First, we make sure that the number of particles is
+                    % greater than the minimum, and then less than or equal
+                    % to the number of remaining particles
+                    nparticles = round(min(remaining_particles, max(box_proportions(i) * obj.M, min_particles)));
+                    remaining_particles = remaining_particles - nparticles;
+                    initpart = [rand(1,nparticles) * bboxes(i,3) + bboxes(i,1);
+                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
+                        randn(1,nparticles); % random velocity in x
+                        randn(1,nparticles); % random velocity in y
+                        ones(1,nparticles) * 1/nparticles];
+                    obj.S = [obj.S initpart];
                 end
-                centroid
+                obj.S
                 % initialise the object with zero initial velocity
-                % CHANGE THIS FOR BETTER ACCURACY
-                obj.measurements = [centroid; 0; 0];
-                obj.cloud_mean = mean(obj.S(1:4,:), 2);
+                obj.measurements = [centroids zeros(size(centroids,1),2)];
             end
         end
         function pf_step(obj, dt, centroids)
             % predict the motion of the particles based on their current
             % velocities and the time elapsed
             obj.pf_predict(dt);
+            % use k-means clustering to find the clusters of particles
+            % corresponding to different objects. The number of centres
+            % correspond to the number of measurements that we receive.
+            % This allows the cluster centres to be matched with the
+            % measurements, and we can use this information to find those
+            % measurements which are not yet represented in the filter.
+            [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1))
+            
+            
             obj.cloud_mean = [obj.cloud_mean mean(obj.S(1:4,:),2)];
             
             % !!!!!THIS IS NOT CORRECT!!!!!

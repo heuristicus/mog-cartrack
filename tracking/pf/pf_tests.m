@@ -80,6 +80,41 @@ pf.pf_step(1,measurements(i+1,:));
 pause(1)
 end
 
+%% testing k-means functionality
+close all
+clear all
+N=10;
+cluster = [randn(N,2);
+           randn(N,2) + 10];
+
+
+
+[idx, centres] = kmeans(cluster, 2, 'replicates', 4)
+
+plot(cluster(idx==1,1),cluster(idx==1,2),'r.','MarkerSize',12)
+hold on
+plot(cluster(idx==2,1),cluster(idx==2,2),'b.','MarkerSize',12)
+plot(centres(:,1),centres(:,2),'kx','MarkerSize',12)
+plot(centres(:,1),centres(:,2),'ko','MarkerSize',12)
+
+%% test particle filter initialisation with multiple measurements
+clear all
+close all
+bboxes = [0 0 1 1;
+          4 4 5 5];
+
+measurements = find_centroid(bboxes);
+
+process_noise = diag([0.3 0.3 0.2 0.2]);
+measurement_noise = diag([0.1 0.1 1 1]);
+
+pf = pf_class(200, process_noise, measurement_noise, measurements, bboxes);
+
+figure
+hold on
+plot(pf.S(1,:),pf.S(2,:),'+')
+axis([-10 10 -10 10])
+
 %% test the particle filter initialisation with blob detection output
 close all
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...

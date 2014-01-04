@@ -1,7 +1,7 @@
-function centroid = find_centroid(bbox)
-%FIND_CENTROID compute the centre of a bounding box specified by 
-% [x y width height]
-%   Detailed explanation goes here
-centroid = [mean([bbox(1) bbox(1) + bbox(3)]) mean([bbox(2) bbox(2) + bbox(4)])];
+function centroid = find_centroid(bboxes)
+%FIND_CENTROID compute the centres of bounding boxes specified by 
+% [x y width height;
+%  ...]
+centroid = [mean([bboxes(:,1) bboxes(:,1) + bboxes(:,3)],2) mean([bboxes(:,2) bboxes(:,2) + bboxes(:,4)],2)];
 end
 
