@@ -109,7 +109,7 @@ measurements = find_centroid(bboxes);
 process_noise = diag([0.3 0.3 0.2 0.2]);
 measurement_noise = diag([0.1 0.1 1 1]);
 
-pf = pf_class(50, process_noise, measurement_noise, measurements, bboxes);
+pf = pf_class(150, process_noise, measurement_noise, measurements, bboxes);
 
 figure
 hold on
@@ -121,7 +121,6 @@ for i=1:size(bboxes,1)
     plot(pf.cluster_means{1}(1,i),pf.cluster_means{1}(2,i),'ro')
     quiver(pf.cluster_means{1}(1,i), pf.cluster_means{1}(2,i), pf.cluster_means{1}(3,i), pf.cluster_means{1}(4,i),'r')
 end
-%axis([-10 10 -10 10])
 
 %% test the particle filter initialisation with blob detection output
 close all

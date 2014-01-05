@@ -37,10 +37,12 @@ classdef pf_class < handle
         cluster_means
         % keep track of the number of steps taken
         stepnum
+        vel_std
+        particle_min_limit
     end
     
     methods
-        function obj=pf_class(num_particles, process_model, measurement_model, centroids, bboxes, particle_min_limit)
+        function obj=pf_class(num_particles, process_model, measurement_model, centroids, bboxes, particle_min_limit, vel_std)
             % particle filter constructor. Process model should be a 4x4
             % matrix, measurement model should be a ? matrix.
             % particle_min_limit is the minimum percentage of the total
@@ -55,7 +57,13 @@ classdef pf_class < handle
                 if nargin < 6
                     particle_min_limit = min(0.1, 1/size(centroids,1));
                 end
-                                
+                % define the standard deviation of the gaussian from which
+                % velocity is sampled if the velocity from a measurement is
+                % zero
+                if nargin < 7
+                    vel_std = 1;
+                end
+                
                 % bbox is in a weird format sometimes - convert to double
                 bboxes = double(bboxes);
                 % Initialises the particle filter with the given number of
@@ -68,37 +76,21 @@ classdef pf_class < handle
                 obj.Qinv = inv(measurement_model);
                 obj.N = 4; % four state components, x, y, and velocities in those directions
                 obj.M = num_particles;
+                obj.vel_std = vel_std;
+                obj.particle_min_limit = particle_min_limit;
                 
-                % Initialise particles randomly based on the measurements
-                % received and their corresponding bboxes. Currently, the
-                % number of particles assigned to each box is proportional
-                % to its size, with a limit on the minimum number assigned
-                box_areas = prod(bboxes(:,3:4),2); % area = width * height
-                total_box_area = sum(box_areas);
-                box_proportions = box_areas/total_box_area;
-                
-                remaining_particles = obj.M;
-                % define the limit on the minimum number of particles
-                min_particles = particle_min_limit * obj.M;
-                for i=1:size(centroids,1)
-                    % First, we make sure that the number of particles is
-                    % greater than the minimum, and then less than or equal
-                    % to the number of remaining particles
-                    nparticles = round(min(remaining_particles, max(box_proportions(i) * obj.M, min_particles)));
-                    remaining_particles = remaining_particles - nparticles;
-                    initpart = [rand(1,nparticles) * bboxes(i,3) + bboxes(i,1);
-                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
-                        randn(1,nparticles); % random velocity in x
-                        randn(1,nparticles); % random velocity in y
-                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
-                    obj.S = [obj.S initpart];
-                end
-                % initialise the object with zero initial velocity
+                % Initialise the object measurements with zero initial velocity
                 obj.measurements = {[centroids zeros(size(centroids,1),2)]'};
-                % compute the cluster centres and the particles belonging
+                
+                % Initialise particles in the filter. Since this is the
+                % first initialisation we initialise all particles based on
+                % the measurements
+                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.vel_std, obj.M);
+                
+                % Compute the cluster centres and the particles belonging
                 % to them
                 [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
-                % compute the mean of each cluster
+                % Compute the mean of each cluster
                 mn = [];
                 for i=1:size(centroids,1)
                    cluster_particles = obj.S(1:4,idx==i);
@@ -108,8 +100,69 @@ classdef pf_class < handle
                 obj.stepnum = 1;
             end
         end
+        function particles=init_particles(obj, measurements, bboxes, vel_std, init_num, gaussian_position)
+            % initialise particles based on the measurements given. The
+            % measurements are expected to be column vectors of the form
+            % [x y xvel yvel]'. If xvel and yvel are not yet computed, then
+            % set the velocities to zero and a velocity will be generated
+            % from a zero mean gaussian with standard deviation of 1. If
+            % the vel_std parameter is provided, that will be used as the
+            % standard deviation instead. The init_num parameter defines
+            % how many particles will be initialised with this function.
+            % The gaussian_position variable should be set to zero to use a
+            % uniform distribution within the bounding box to initialise
+            % particles. If >1, the particles will be initialised using a
+            % gaussian which has standard deviation of 
+            
+            if nargin < 6
+                gaussian_position = 0;
+            end
+            
+            % Initialise particles randomly based on the measurements
+            % received and their corresponding bboxes. Currently, the
+            % number of particles assigned to each box is proportional
+            % to its size, with a limit on the minimum number assigned
+            box_areas = prod(bboxes(:,3:4),2); % area = width * height
+            total_box_area = sum(box_areas);
+            box_proportions = box_areas/total_box_area;
+            
+            remaining_particles = init_num;
+            % define the limit on the minimum number of particles
+            min_particles = obj.particle_min_limit * init_num;
+            particles = [];
+            for i=1:size(measurements,2)
+                % First, we make sure that the number of particles is
+                % greater than the minimum, and then less than or equal
+                % to the number of remaining particles
+                nparticles = round(min(remaining_particles, max(box_proportions(i) * obj.M, min_particles)));
+                % subtract the number of particles to initialise from this
+                % centre from the total number to be initialised
+                remaining_particles = remaining_particles - nparticles;
+                % define the x y positions and the corresponding
+                % directional velocities for each particle
+                if gaussian_position
+                    maxlen = max(bboxes(i,3), bboxes(i,4));
+                    initpart = [randn(1,nparticles) * maxlen + measurements(1,i);
+                        randn(1,nparticles) *maxlen + measurements(2,i);
+                        randn(1,nparticles) * vel_std; % random velocity in x
+                        randn(1,nparticles) * vel_std; % random velocity in y
+                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
+                else
+                    initpart = [rand(1,nparticles) * bboxes(i,3) + bboxes(i,1);
+                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
+                        randn(1,nparticles) * vel_std; % random velocity in x
+                        randn(1,nparticles) * vel_std; % random velocity in y
+                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
+                end
+                
+                % this is probably slow - fill up an initial zero matrix
+                % instead
+                particles = [particles initpart];
+            end
+        end
         function pf_step(obj, dt, centroids)
-            obj.stepnum = obj.stepnum+ 1;
+            obj.stepnum = obj.stepnum + 1;
+            prev_measurements = obj.measurements{1, obj.stepnum - 1};
             % predict the motion of the particles based on their current
             % velocities and the time elapsed
             obj.pf_predict(dt);
