@@ -1,7 +1,9 @@
 function drawCenteredRectangle(data,color)
 %DRAWCENTEREDRECTANGLE Summary of this function goes here
 %   Detailed explanation goes here
-display('asd');
+% Inputs:
+%             data:           4x1
+     
 x = data(1);
 y = data(2);
 w = data(3);

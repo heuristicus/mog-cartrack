@@ -120,6 +120,8 @@ for i=1:size(bboxes,1)
     % plot(pf.cluster_means{1}(i,1),pf.cluster_means{1}(i,2),'ro')
     plot(pf.cluster_means{1}(1,i),pf.cluster_means{1}(2,i),'ro')
     quiver(pf.cluster_means{1}(1,i), pf.cluster_means{1}(2,i), pf.cluster_means{1}(3,i), pf.cluster_means{1}(4,i),'r')
+    %Plot measurements
+    plot(measurements(i,1),measurements(i,2),'go');
 end
 
 %% test the particle filter initialisation with blob detection output
