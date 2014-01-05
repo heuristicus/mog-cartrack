@@ -29,6 +29,9 @@ classdef pf_class < handle
         % computed from the previous measurement and the one received in
         % the current timestep
         measurements
+        
+        % keep track of the bboxes received over time
+        bboxes
         % keep track of the cluster centres in the cloud. There could be a
         % different number of centres each timestep, so this is a cell
         % array. Each cell contains the cluster means for a given timestep
@@ -39,15 +42,21 @@ classdef pf_class < handle
         stepnum
         vel_std
         particle_min_limit
+        measurement_particle_prop
     end
     
     methods
-        function obj=pf_class(num_particles, process_model, measurement_model, centroids, bboxes, particle_min_limit, vel_std)
+        function obj=pf_class(num_particles, process_model, measurement_model, centroids, bboxes, particle_min_limit, vel_std, measurement_particle_prop)
             % particle filter constructor. Process model should be a 4x4
             % matrix, measurement model should be a ? matrix.
             % particle_min_limit is the minimum percentage of the total
             % number of particles that can be assigned to any single
             % measurement. Its value should be between 0 and 1.
+            % vel_std is the standard deviation which defines the spread of
+            % the gaussian used to initialise the velocity of particles
+            % measurement_particle_prop defines the proportion of particles
+            % to be reinitialised onto the measurements at the beginning of
+            % each timestep in order to allow the addition of new objects
             
             % only initialise stuff if there are parameters passed. This is
             % required to create arrays of pf_class objects
@@ -64,6 +73,10 @@ classdef pf_class < handle
                     vel_std = 1;
                 end
                 
+                if nargin < 8
+                    measurement_particle_prop = 0.3;
+                end
+                
                 % bbox is in a weird format sometimes - convert to double
                 bboxes = double(bboxes);
                 % Initialises the particle filter with the given number of
@@ -78,14 +91,16 @@ classdef pf_class < handle
                 obj.M = num_particles;
                 obj.vel_std = vel_std;
                 obj.particle_min_limit = particle_min_limit;
+                obj.measurement_particle_prop = measurement_particle_prop;
                 
                 % Initialise the object measurements with zero initial velocity
                 obj.measurements = {[centroids zeros(size(centroids,1),2)]'};
+                obj.bboxes = {bboxes};
                 
                 % Initialise particles in the filter. Since this is the
                 % first initialisation we initialise all particles based on
                 % the measurements
-                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.vel_std, obj.M);
+                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.M, obj.vel_std);
                 
                 % Compute the cluster centres and the particles belonging
                 % to them
@@ -100,7 +115,7 @@ classdef pf_class < handle
                 obj.stepnum = 1;
             end
         end
-        function particles=init_particles(obj, measurements, bboxes, vel_std, init_num, gaussian_position)
+        function particles=init_particles(obj, measurements, bboxes, init_num, vel_std, gaussian_position)
             % initialise particles based on the measurements given. The
             % measurements are expected to be column vectors of the form
             % [x y xvel yvel]'. If xvel and yvel are not yet computed, then
@@ -111,8 +126,8 @@ classdef pf_class < handle
             % how many particles will be initialised with this function.
             % The gaussian_position variable should be set to zero to use a
             % uniform distribution within the bounding box to initialise
-            % particles. If >1, the particles will be initialised using a
-            % gaussian which has standard deviation of 
+            % particles. If >0, the particles will be initialised using a
+            % gaussian which has standard deviation of vel_std
             
             if nargin < 6
                 gaussian_position = 0;
@@ -134,7 +149,7 @@ classdef pf_class < handle
                 % First, we make sure that the number of particles is
                 % greater than the minimum, and then less than or equal
                 % to the number of remaining particles
-                nparticles = round(min(remaining_particles, max(box_proportions(i) * obj.M, min_particles)));
+                nparticles = round(min(remaining_particles, max(box_proportions(i) * init_num, min_particles)));
                 % subtract the number of particles to initialise from this
                 % centre from the total number to be initialised
                 remaining_particles = remaining_particles - nparticles;
@@ -143,26 +158,47 @@ classdef pf_class < handle
                 if gaussian_position
                     maxlen = max(bboxes(i,3), bboxes(i,4));
                     initpart = [randn(1,nparticles) * maxlen + measurements(1,i);
-                        randn(1,nparticles) *maxlen + measurements(2,i);
-                        randn(1,nparticles) * vel_std; % random velocity in x
-                        randn(1,nparticles) * vel_std; % random velocity in y
-                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
+                        randn(1,nparticles) *maxlen + measurements(2,i)];
                 else
                     initpart = [rand(1,nparticles) * bboxes(i,3) + bboxes(i,1);
-                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
-                        randn(1,nparticles) * vel_std; % random velocity in x
-                        randn(1,nparticles) * vel_std; % random velocity in y
-                        ones(1,nparticles) * 1/obj.M]; % all particles in the whole set have the same weight
+                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2)];
                 end
                 
+                % if the velocities are nonzero for this measurement (i.e.
+                % it has been seen before and we have updated the
+                % velocities), then we initialise the particles with
+                % velocities close to that initial velocity. Otherwise, we
+                % define a random velocity.
+                % ???? maybe better to skip those measurements which have
+                % already been seen and just work on new ones?
+                if sum(measurements(3:4,i)) == 0
+                    initpart = [initpart;
+                                % velocities randomly selected
+                                randn(1,nparticles);
+                                randn(1,nparticles);
+                                ones(1,nparticles) * 1/obj.M];
+                else
+                    initpart = [initpart;
+                                % velocities based on previous value
+                                randn(1,nparticles) + measurements(3,i);
+                                randn(1,nparticles) + measurements(4,i);
+                                ones(1,nparticles) * 1/obj.M];
+                end
+               
                 % this is probably slow - fill up an initial zero matrix
                 % instead
                 particles = [particles initpart];
             end
         end
-        function pf_step(obj, dt, centroids)
+        function pf_step(obj, dt, centroids, bboxes)
             obj.stepnum = obj.stepnum + 1;
             prev_measurements = obj.measurements{1, obj.stepnum - 1};
+            prev_bboxes = obj.bboxes{1, obj.stepnum -1};
+            % initialise M particles on all of the measurements received in
+            % the PREVIOUS timestep
+            part = obj.init_particles(prev_measurements, prev_bboxes, round(obj.measurement_particle_prop * obj.M))
+            
+            
             % predict the motion of the particles based on their current
             % velocities and the time elapsed
             obj.pf_predict(dt);
@@ -172,23 +208,25 @@ classdef pf_class < handle
             % This allows the cluster centres to be matched with the
             % measurements, and we can use this information to find those
             % measurements which are not yet represented in the filter.
-            [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1))
+            [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1));
             
+%             % !!!!!THIS IS NOT CORRECT!!!!!
+%             % need to extract the centroid which corresponds to the one
+%             % which this filter is tracking
+%             matched_centroid = centroids(1,:); % FIX THIS
+%             if size(matched_centroid,2) ~= 1
+%                 matched_centroid = matched_centroid';
+%             end
+%             last_measurement = obj.measurements(:,end);
+%             object_velocity = last_measurement(1:2) - matched_centroid;
+%             measurement = [matched_centroid;
+%                            object_velocity]
+%                        
+%         
             obj.cluster_means(1,obj.stepnum) = {[centres]};
             
-            % !!!!!THIS IS NOT CORRECT!!!!!
-            % need to extract the centroid which corresponds to the one
-            % which this filter is tracking
-            matched_centroid = centroids(1,:); % FIX THIS
-            if size(matched_centroid,2) ~= 1
-                matched_centroid = matched_centroid';
-            end
-            last_measurement = obj.measurements(:,end);
-            object_velocity = last_measurement(1:2) - matched_centroid;
-            measurement = [matched_centroid;
-                           object_velocity]
-            
             obj.measurements{1,obj.stepnum} = measurement;
+            obj.bboxes{1,obj.stepnum} = bboxes;
             
             obj.pf_weight(measurement)
             obj.pf_resample()
