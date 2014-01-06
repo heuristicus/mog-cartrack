@@ -51,6 +51,7 @@ classdef pf_class < handle
         particle_min_limit
         % the normalisation constant used when reweighting particles
         normalisation
+        initialised
     end
     
     methods
@@ -72,7 +73,12 @@ classdef pf_class < handle
                 % define the particle limit if one is not passed. Use 0.1
                 % unless there care more than 10 measurements
                 if nargin < 6
-                    particle_min_limit = min(0.1, 1/size(centroids,1));
+                    if nargin > 4
+                        particle_min_limit = min(0.1, 1/size(centroids,1));
+                    else
+                        particle_min_limit = 0.1;
+                    end
+                    
                 end
                 % define the standard deviation of the gaussian from which
                 % velocity is sampled if the velocity from a measurement is
@@ -85,8 +91,7 @@ classdef pf_class < handle
                     measurement_particle_prop = 0.3;
                 end
                 
-                % bbox is in a weird format sometimes - convert to double
-                bboxes = double(bboxes);
+                
                 % Initialises the particle filter with the given number of
                 % particles and the given process models. Particles are
                 % initialised within the given bounding box bbox, which is
@@ -102,25 +107,38 @@ classdef pf_class < handle
                 obj.vel_std = vel_std;
                 obj.particle_min_limit = particle_min_limit;
                 
-                % Initialise the object measurements with zero initial velocity
-                obj.measurements = {[centroids zeros(size(centroids,1),2)]'};
-                obj.bboxes = {bboxes};
-                
-                % Initialise particles in the filter. Since this is the
-                % first initialisation we initialise all particles based on
-                % the measurements
-                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.total_particles, obj.vel_std);
-                
-                % Compute the cluster centres and the particles belonging
-                % to them
-                [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
-                % Compute the mean of each cluster
-                mn = [];
-                for i=1:size(centroids,1)
-                   cluster_particles = obj.S(1:4,idx==i);
-                   mn = [mn mean(cluster_particles,2)];
+                % if we are not passed any centroids or bboxes, just
+                % initialise the parameters, not the particles. Indicate
+                % the non-initialised state by the initialised flag
+                if nargin < 4
+                    obj.initialised = 0;
+                    obj.measurements{1,1} = [];
+                    obj.bboxes{1,1} = [];
+                    obj.cluster_means{1,1} = [];
+                else
+                    % bbox is in a weird format sometimes - convert to double
+                    bboxes = double(bboxes);
+                    % Initialise the object measurements with zero initial velocity
+                    obj.measurements{1,1} = [centroids zeros(size(centroids,1),2)]';
+                    obj.bboxes{1,1} = bboxes;
+                    
+                    % Initialise particles in the filter. Since this is the
+                    % first initialisation we initialise all particles based on
+                    % the measurements
+                    obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.total_particles, obj.vel_std);
+                    
+                    % Compute the cluster centres and the particles belonging
+                    % to them
+                    [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
+                    % Compute the mean of each cluster
+                    mn = [];
+                    for i=1:size(centroids,1)
+                        cluster_particles = obj.S(1:4,idx==i);
+                        mn = [mn mean(cluster_particles,2)];
+                    end
+                    obj.cluster_means = {mn};
+                    obj.initialised = 1;
                 end
-                obj.cluster_means = {mn};
                 obj.stepnum = 1;
             end
         end
@@ -142,6 +160,8 @@ classdef pf_class < handle
                 gaussian_position = 0;
             end
             
+            bboxes = double(bboxes);
+            
             % Initialise particles randomly based on the measurements
             % received and their corresponding bboxes. Currently, the
             % number of particles assigned to each box is proportional
@@ -158,7 +178,11 @@ classdef pf_class < handle
                 % First, we make sure that the number of particles is
                 % greater than the minimum, and then less than or equal
                 % to the number of remaining particles
-                nparticles = round(min(remaining_particles, max(box_proportions(i) * init_num, min_particles)));
+                if i == size(measurements,2)
+                    nparticles = remaining_particles;
+                else
+                    nparticles = round(min(remaining_particles, max(box_proportions(i) * init_num, min_particles)));
+                end
                 % subtract the number of particles to initialise from this
                 % centre from the total number to be initialised
                 remaining_particles = remaining_particles - nparticles;
@@ -180,7 +204,6 @@ classdef pf_class < handle
                 % define a random velocity.
                 % ???? maybe better to skip those measurements which have
                 % already been seen and just work on new ones?
-                measurements
                 if sum(measurements(3:4,i)) == 0
                     initpart = [initpart;
                                 % velocities randomly selected
@@ -201,15 +224,35 @@ classdef pf_class < handle
             end
         end
         function pf_step(obj, dt, centroids, bboxes)
+            
+            bboxes = double(bboxes); % stupid bbox format
             obj.stepnum = obj.stepnum + 1;
-            prev_measurements = obj.measurements{1, obj.stepnum - 1};
-            prev_bboxes = obj.bboxes{1, obj.stepnum -1};
+            reinitialised = 0;
+            
+            % if there are no measurements received, there is nothing left
+            % to track
+            % this is an incorrect assumption if multiple things are
+            % occluded!
+            if isempty(centroids) || isempty(bboxes)
+                obj.bboxes{1,obj.stepnum} = [];
+                obj.measurements{1,obj.stepnum} = [];
+                obj.initialised = 0;
+                return
+            end
+            
+            if obj.initialised == 0
+                obj.S = obj.init_particles([centroids zeros(size(centroids,1),2)]', bboxes, obj.total_particles, obj.vel_std);
+                reinitialised = 1;
+                obj.initialised = 1;
+            end
             
             % initialise M particles on all of the measurements received in
             % the PREVIOUS timestep. In the first timestep this is not
             % necessary as all particles are initialised in this way
             % regardless.
-            if obj.stepnum ~= 2
+            if obj.stepnum > 2 && reinitialised ~= 1
+                prev_measurements = obj.measurements{1, obj.stepnum - 1};
+                prev_bboxes = obj.bboxes{1, obj.stepnum -1};
                 part = obj.init_particles(prev_measurements, prev_bboxes, obj.measurement_particles);
                 obj.S = [obj.S part];
             end
@@ -253,6 +296,8 @@ classdef pf_class < handle
             rn = randn(obj.total_particles,4) * obj.R;
             % add a column of zeros and take the transpose to make a 5xM matrix
             noise = [rn zeros(obj.total_particles,1)]';
+            size(noise)
+            size(obj.S)
             % add the noise to each particle
             obj.S = obj.S + noise;
         end

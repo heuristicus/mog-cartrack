@@ -128,12 +128,13 @@ end
 
 clear all
 close all
+
 initial_bboxes = [0 0 1 1;
                   4 4 5 5];
       
 centroids = find_centroid(initial_bboxes);
 
-nsteps = 3;
+nsteps = 7;
 % each pair of rows corresponds to a set of x,y measurements for a given
 % object over the timesteps
 meas_tmp = zeros(size(centroids,1) * 2, nsteps);
@@ -188,15 +189,43 @@ for j=1:nsteps
     pause
 end
 
+%%
+
+% xstart ystart bboxw bboxh xend yend nsteps startstep
+def = [3 3 1 1 6 6 6 0;
+       7 8 2 2 10 10 6 0;
+       5 3 2 2 7 0 3 3];
+
+
+nsteps = max(def(:,7));
+nobjects = size(def,1);
+measurements = zeros(max(def(:,7)),2*size(def,1))
+% deal with each row in turn
+for i=1:size(def,1)
+    j = (i - 1)*2 + 1; % index the first column of measurements for this object
+    bbox = create_bbox(def(i,1), def(i,2), def(i,3), def(i,4))
+    measurements(def(i,8) + 1:def(i,8)+def(i,7), j:j+1) = [linspace(def(i,1), def(i,5), def(i,7))' linspace(def(i,2), def(i,6), def(i,7))']
+end
+
+for i=1:nsteps
+   rw = reshape(measurements(i,:), 2, nobjects)'
+end
+
+
 %% test the particle filter initialisation with blob detection output
 close all
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...
     'NumTrainingFrames', 1);
 
 videoReader = vision.VideoFileReader('viptraffic.avi');
+
+pf = pf_class(1000, process_noise, measurement_noise);
+
+process_noise = diag([0.3 0.3 0.2 0.2]);
+measurement_noise = diag([0.1 0.1]);
+
 figure
 for i = 1:200
-    i
     frame = step(videoReader); % read the next video frame
     subplot(231)
     imshow(frame)
@@ -220,29 +249,10 @@ for i = 1:200
     [area, centroid, bbox] = step(blobAnalysis, filteredForeground);
     bboxes = insertShape(frame, 'Rectangle', bbox, 'Color', 'green');
     
-    % initialise multiple particle filters to see whether particles are
-    % correctly distributed
-    if i >= 125
-        % define an array of particle filter objects
-        pfs = pf_class.empty(size(bbox,1),0);
-        circ = [];
-        for j = 1:size(bbox,1)
-            j
-            pfs(j) = pf_class(10, eye(4), eye(2), bbox(j,:));
-            % extract x y coordinates of particles and make circles by
-            % adding a radius
-            xy = pfs(j).S(1:2,:);
-            tmpcirc = [xy;
-                       ones(1,pfs(j).M) * 0.5]';
-            circ = [circ;
-                    tmpcirc];
-        end
-        circles = insertShape(frame, 'Circle', circ, 'Color', 'red');
-        subplot(235)
-        imshow(circles)
-    end
-    
     subplot(234)
     imshow(bboxes)
-    pause
+    
+    pf.pf_step(1,centroid,bbox);
+    
+    pause(0.1)
 end
