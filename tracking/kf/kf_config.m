@@ -11,11 +11,11 @@ function params = kf_config()
 %            -sigma0         6x6
 %            -dt             1x1
            
-R = diag([0.3 0.3 0.1 0.1 0.1 0.1]);
-Q = diag([0.1 0.1 0.1 0.1]);
-sigma0 = diag([0.5 0.5 0.5 0.5 10.0 10.0]); %Unknown velocity => high variance
+R = diag([5 5 5 5 0.5 0.5]);
+Q = diag([5 5 10 10]);
+sigma0 = diag([5 5 5 5 100.0 100.0]); %Unknown velocity => high variance
 dt = 1; %1 frame
-deltaM = 0.8; %Percentage of measurements that we think are valid
+deltaM = 0.99; %Percentage of measurements that we think are valid
 
 params = struct('R',R,'Q',Q,'sigma0',sigma0,'dt',dt,'deltaM',deltaM);
 
