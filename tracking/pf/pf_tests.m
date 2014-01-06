@@ -164,24 +164,26 @@ for i = 2:nsteps
 end
 
 process_noise = diag([0.3 0.3 0.2 0.2]);
-measurement_noise = diag([0.1 0.1 1 1]);
+measurement_noise = diag([0.1 0.1]);
 
-pf = pf_class(150, process_noise, measurement_noise, measurements{1}, bboxes{1});
+pf = pf_class(1000, process_noise, measurement_noise, measurements{1}, bboxes{1});
 
 figure
-hold on
-quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:),pf.S(4,:))
 for j=1:nsteps
+    clf
+    hold on
+    quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:),pf.S(4,:))
     for i=1:size(bboxes{j},1)
         rectangle('position', bboxes{j}(i,:))
         %                 row------|
         %         timestep------v  v v----------column
         % plot(pf.cluster_means{1}(i,1),pf.cluster_means{1}(i,2),'ro')
-        plot(pf.cluster_means{j}(1,i),pf.cluster_means{j}(2,i),'ro')
-        quiver(pf.cluster_means{j}(1,i), pf.cluster_means{j}(2,i), pf.cluster_means{j}(3,i), pf.cluster_means{j}(4,i), 0,'color','r')
+        %plot(pf.cluster_means{j}(1,i),pf.cluster_means{j}(2,i),'ro')
+        %quiver(pf.cluster_means{j}(1,i), pf.cluster_means{j}(2,i), pf.cluster_means{j}(3,i), pf.cluster_means{j}(4,i), 0,'color','r')
         %Plot measurements
         plot(measurements{j}(i,1),measurements{j}(i,2),'go');
     end
+    axis([0 15 0 15])
     pf.pf_step(1, measurements{j+1},bboxes{j+1});
     pause
 end

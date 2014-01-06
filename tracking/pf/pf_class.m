@@ -18,9 +18,13 @@ classdef pf_class < handle
         % noise model inverse
         Qinv
         % number of particles
-        M
-        % size of the state vector
-        N
+        total_particles
+        % number of particles which are resampled from the original
+        % posterior, not from the measurements
+        resampled_particles
+        % number of particles initialised from the measurements at each
+        % timestep
+        measurement_particles
         % keep track of the measurements received over time. There could be
         % a different number of measurements each timestep, so this is a
         % cell array where the measurements for each timestep are one cell,
@@ -29,7 +33,6 @@ classdef pf_class < handle
         % computed from the previous measurement and the one received in
         % the current timestep
         measurements
-        
         % keep track of the bboxes received over time
         bboxes
         % keep track of the cluster centres in the cloud. There could be a
@@ -40,9 +43,14 @@ classdef pf_class < handle
         cluster_means
         % keep track of the number of steps taken
         stepnum
+        % the standard deviation of the velocity assigned to particles when
+        % initialising them.
         vel_std
+        % the minimum percentage of the number of particles being
+        % initialised which can be assigned to a single measurement.
         particle_min_limit
-        measurement_particle_prop
+        % the normalisation constant used when reweighting particles
+        normalisation
     end
     
     methods
@@ -87,11 +95,12 @@ classdef pf_class < handle
                 obj.R = process_model;
                 obj.Q = measurement_model;
                 obj.Qinv = inv(measurement_model);
-                obj.N = 4; % four state components, x, y, and velocities in those directions
-                obj.M = num_particles;
+                obj.normalisation = 1/(2*pi*sqrt(det(obj.Q)));
+                obj.total_particles = num_particles;
+                obj.measurement_particles = round(measurement_particle_prop * obj.total_particles);
+                obj.resampled_particles = obj.total_particles - obj.measurement_particles;
                 obj.vel_std = vel_std;
                 obj.particle_min_limit = particle_min_limit;
-                obj.measurement_particle_prop = measurement_particle_prop;
                 
                 % Initialise the object measurements with zero initial velocity
                 obj.measurements = {[centroids zeros(size(centroids,1),2)]'};
@@ -100,7 +109,7 @@ classdef pf_class < handle
                 % Initialise particles in the filter. Since this is the
                 % first initialisation we initialise all particles based on
                 % the measurements
-                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.M, obj.vel_std);
+                obj.S = obj.init_particles(obj.measurements{1}, bboxes, obj.total_particles, obj.vel_std);
                 
                 % Compute the cluster centres and the particles belonging
                 % to them
@@ -171,18 +180,19 @@ classdef pf_class < handle
                 % define a random velocity.
                 % ???? maybe better to skip those measurements which have
                 % already been seen and just work on new ones?
+                measurements
                 if sum(measurements(3:4,i)) == 0
                     initpart = [initpart;
                                 % velocities randomly selected
                                 randn(1,nparticles);
                                 randn(1,nparticles);
-                                ones(1,nparticles) * 1/obj.M];
+                                ones(1,nparticles) * 1/obj.total_particles];
                 else
                     initpart = [initpart;
                                 % velocities based on previous value
                                 randn(1,nparticles) + measurements(3,i);
                                 randn(1,nparticles) + measurements(4,i);
-                                ones(1,nparticles) * 1/obj.M];
+                                ones(1,nparticles) * 1/obj.total_particles];
                 end
                
                 % this is probably slow - fill up an initial zero matrix
@@ -194,41 +204,38 @@ classdef pf_class < handle
             obj.stepnum = obj.stepnum + 1;
             prev_measurements = obj.measurements{1, obj.stepnum - 1};
             prev_bboxes = obj.bboxes{1, obj.stepnum -1};
-            % initialise M particles on all of the measurements received in
-            % the PREVIOUS timestep
-            part = obj.init_particles(prev_measurements, prev_bboxes, round(obj.measurement_particle_prop * obj.M))
             
+            % initialise M particles on all of the measurements received in
+            % the PREVIOUS timestep. In the first timestep this is not
+            % necessary as all particles are initialised in this way
+            % regardless.
+            if obj.stepnum ~= 2
+                part = obj.init_particles(prev_measurements, prev_bboxes, obj.measurement_particles);
+                obj.S = [obj.S part];
+            end
             
             % predict the motion of the particles based on their current
             % velocities and the time elapsed
             obj.pf_predict(dt);
-            % use k-means clustering to find the clusters of particles
-            % corresponding to different objects. The number of centres
-            % correspond to the number of measurements that we receive.
-            % This allows the cluster centres to be matched with the
-            % measurements, and we can use this information to find those
-            % measurements which are not yet represented in the filter.
-            [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1));
             
-%             % !!!!!THIS IS NOT CORRECT!!!!!
-%             % need to extract the centroid which corresponds to the one
-%             % which this filter is tracking
-%             matched_centroid = centroids(1,:); % FIX THIS
-%             if size(matched_centroid,2) ~= 1
-%                 matched_centroid = matched_centroid';
-%             end
-%             last_measurement = obj.measurements(:,end);
-%             object_velocity = last_measurement(1:2) - matched_centroid;
-%             measurement = [matched_centroid;
-%                            object_velocity]
-%                        
-%         
-            obj.cluster_means(1,obj.stepnum) = {[centres]};
+%             % use k-means clustering to find the clusters of particles
+%             % corresponding to different objects. The number of centres
+%             % correspond to the number of measurements that we receive.
+%             % This allows the cluster centres to be matched with the
+%             % measurements, and we can use this information to find those
+%             % measurements which are not yet represented in the filter.
+%             obj.S(1:2,:)'
+%             [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1));
+%             
+%             obj.cluster_means(1,obj.stepnum) = {[centres]};
             
-            obj.measurements{1,obj.stepnum} = measurement;
+            % reweight the particles according to their proximity to the
+            % nearest measurement
+            obj.pf_weight(centroids);        
+            
             obj.bboxes{1,obj.stepnum} = bboxes;
+            obj.measurements{1,obj.stepnum} = [centroids zeros(size(centroids,1),2)]';
             
-            obj.pf_weight(measurement)
             obj.pf_resample()
         end
         function pf_predict(obj, dt)
@@ -243,50 +250,73 @@ classdef pf_class < handle
             obj.S(1:2,:) = [obj.S(1,:) + obj.S(3,:) * dt;
                             obj.S(2,:) + obj.S(4,:) * dt];
             % generate random noise and multiply it by the process noise covariance
-            rn = randn(obj.M,4) * obj.R;
+            rn = randn(obj.total_particles,4) * obj.R;
             % add a column of zeros and take the transpose to make a 5xM matrix
-            noise = [rn zeros(obj.M,1)]';
+            noise = [rn zeros(obj.total_particles,1)]';
             % add the noise to each particle
             obj.S = obj.S + noise;
         end
-        function pf_weight(obj, measurement)
+        function pf_weight(obj, centroids)
+            % after prediction, we compare the values of all the new
+            % particles against the measurements that were received and
+            % weight them accordingly. Each particle is weighted according
+            % to the closest measurement. The closest measurement is the
+            % one which has the lowest absolute error. The velocity is not
+            % considered in the computation since we do not really know how
+            % to match measurements from the previous timestep
+            
+            % minmat will contain the minimum error for each particle on
+            % the first row, and the corresponding measurement index in the
+            % second. The last two rows contain the values which correspond
+            % to the innovation in x and y
+            minmat = [10000 * ones(1,obj.total_particles);
+                      -1 * ones(3,obj.total_particles)];
+
+            for i=1:size(centroids,1)
+                % super simple distance computation - essentially the
+                % city-block distance. We don't care about the actual
+                % distance, only need to know which particles are closest
+                xydist = obj.S(1:2,:) - repmat(centroids(i,:)',1,obj.total_particles);
+                distances=sum(abs(xydist),1);
+                smaller = distances < minmat(1,:);
+                
+                % replace the values in minmat with the new smallest index
+                % and value if the computed distance is smaller.
+                minmat(:,smaller==1) = [distances(:,smaller==1);
+                                        i * ones(1,size(find(smaller),2));
+                                        xydist(:,smaller==1)];
+            end
+            
+            nu = minmat(3:4,:);
+
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
-            normalisation = 1/(2*pi*sqrt(det(obj.Q)));
-            % repeat the measurement made so that all particles can be
-            % compared
-            msrep = repmat(measurement,1,obj.M);
-            
-            % each particle is attempting to represent the motion of the
-            % object, and so we do not have any observation model (?)
-            % As a result, nu contains simply the differences between each
-            % particle and the measurement of the position of the object
-            % that has been received
-            nu = msrep - obj.S(1:4,:);
-            
-            p = diag(normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
+            p = diag(obj.normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
             p = p/sum(p);
             obj.S(5,:)=p;
         end
         function pf_resample(obj)
             % cumulative sum of the particle weights
             cdf = cumsum(obj.S(5,:));
-            % initial random value between 0 and 1/M
-            r_0 = rand / obj.M;
+            % initial random value between 0 and 1/resampled_particles. Do
+            % not use 1/total_particles, because that would mean that
+            % particles at the end of the list are skipped each time
+            r_0 = rand / obj.resampled_particles;
             % initialise a new particle matrix in which to store selected
-            % particles
-            new_particles = zeros(5,obj.M);
+            % particles.
+            new_particles = zeros(5,obj.resampled_particles);
             % loop over all particles and choose the particle to carry over
             % to the next timestep
-            for m = 1 : obj.M
+            for m = 1 : obj.resampled_particles
                 % the new particle is the one corresponding to the index
                 % in the cdf which exceeds the current random number
                 new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
                 % the random number is incremented by 1/M each time
-                r_0 = r_0 + 1/obj.M;
+                r_0 = r_0 + 1/obj.resampled_particles;
             end
-            % the new particles are all given a uniform weight
-            new_particles(5,:) = 1/obj.M*ones(1,obj.M);
+            % the new particles are all given a uniform weight according to
+            % the total number of particles which will be in the set
+            new_particles(5,:) = 1/obj.total_particles*ones(1,obj.resampled_particles);
             % put the new particles into the object
             obj.S = new_particles;
         end
