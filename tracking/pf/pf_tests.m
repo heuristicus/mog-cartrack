@@ -164,23 +164,26 @@ for i = 2:nsteps
     %bboxes{1,i};
 end
 
-process_noise = diag([0.3 0.3 0.1 0.1 0.2 0.2]);
+process_noise = diag([0.3 0.3 0.1 0.1 0.3 0.3]);
 measurement_noise = diag([0.3 0.3]);
 
 pf = pf_class(200, process_noise, measurement_noise, measurements{1}, bboxes{1});
 
 figure
 for j=1:nsteps
+    fprintf('--------timestep %d\n--------', j);
     clf
     hold on
+    fprintf('plotting particles with velocities\n');
     quiver(pf.S(1,:),pf.S(2,:),pf.S(5,:),pf.S(6,:))
     for i=1:size(bboxes{j},1)
+        fprintf('plotting bboxes and cluster means for object %d\n', i);
         rectangle('position', bboxes{j}(i,:))
         %                 row------|
         %         timestep------v  v v----------column
-        % plot(pf.cluster_means{1}(i,1),pf.cluster_means{1}(i,2),'ro')
-        %plot(pf.cluster_means{j}(1,i),pf.cluster_means{j}(2,i),'ro')
-        %quiver(pf.cluster_means{j}(1,i), pf.cluster_means{j}(2,i), pf.cluster_means{j}(3,i), pf.cluster_means{j}(4,i), 0,'color','r')
+        % plot(pf.cluster_means{j}(i,1),pf.cluster_means{1}(i,2),'ro')
+        plot(pf.cluster_means{j}(1,i),pf.cluster_means{j}(2,i),'ro')
+        quiver(pf.cluster_means{j}(1,i), pf.cluster_means{j}(2,i), pf.cluster_means{j}(5,i), pf.cluster_means{j}(6,i), 0,'color','r')
         %Plot measurements
         plot(measurements{j}(i,1),measurements{j}(i,2),'go');
     end

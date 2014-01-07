@@ -7,5 +7,5 @@ dbstop(s);
 
 
 videoFile = 'viptraffic.avi';
-filter = 0; %Kalman Filter
+filter = 1; %Kalman Filter
 main(videoFile,filter);

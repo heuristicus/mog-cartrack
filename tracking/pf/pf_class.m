@@ -136,7 +136,7 @@ classdef pf_class < handle
                         cluster_particles = obj.S(1:6,idx==i);
                         mn = [mn mean(cluster_particles,2)];
                     end
-                    obj.cluster_means = {mn};
+                    obj.cluster_means{1,1} = mn;
                     obj.initialised = 1;
                 end
                 obj.stepnum = 1;
@@ -229,7 +229,7 @@ classdef pf_class < handle
                 particles = [particles initpart];
             end
         end
-        function pf_step(obj, dt, centroids, bboxes)
+        function trackedObjects=pf_step(obj, dt, centroids, bboxes)
             
             bboxes = double(bboxes); % stupid bbox format
             obj.stepnum = obj.stepnum + 1;
@@ -243,6 +243,7 @@ classdef pf_class < handle
                 obj.bboxes{1,obj.stepnum} = [];
                 obj.measurements{1,obj.stepnum} = [];
                 obj.initialised = 0;
+                trackedObjects=[]
                 return
             end
             
@@ -267,17 +268,6 @@ classdef pf_class < handle
             % velocities and the time elapsed
             obj.pf_predict(dt);
             
-%             % use k-means clustering to find the clusters of particles
-%             % corresponding to different objects. The number of centres
-%             % correspond to the number of measurements that we receive.
-%             % This allows the cluster centres to be matched with the
-%             % measurements, and we can use this information to find those
-%             % measurements which are not yet represented in the filter.
-%             obj.S(1:2,:)'
-%             [idx, centres] = kmeans(obj.S(1:2,:)', size(centroids,1));
-%             
-%             obj.cluster_means(1,obj.stepnum) = {[centres]};
-            
             % reweight the particles according to their proximity to the
             % nearest measurement
             obj.pf_weight(centroids);        
@@ -286,6 +276,18 @@ classdef pf_class < handle
             obj.measurements{1,obj.stepnum} = [centroids zeros(size(centroids,1),2)]';
             
             obj.pf_resample()
+
+            % compute clusters using kmeans - these should correspond to
+            % the number of objects in the scene
+            [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
+            % Compute the mean of each cluster
+            mn = [];
+            for i=1:size(centroids,1)
+                cluster_particles = obj.S(1:6,idx==i);
+                mn = [mn mean(cluster_particles,2)];
+            end
+            obj.cluster_means{1,obj.stepnum} = mn;
+            trackedObjects = mn;
         end
         function pf_predict(obj, dt)
             % Use this to predict the next state for each particle based on
@@ -300,11 +302,8 @@ classdef pf_class < handle
                             obj.S(2,:) + obj.S(6,:) * dt];
             % generate random noise and multiply it by the process noise covariance
             rn = randn(obj.total_particles,6) * obj.R;
-            size(obj.S)
-            size(rn)
             % add a column of zeros and take the transpose to make a 5xM matrix
             noise = [rn zeros(obj.total_particles,1)]';
-            size(noise)
             % add the noise to each particle
             obj.S = obj.S + noise;
         end

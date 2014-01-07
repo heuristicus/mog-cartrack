@@ -28,6 +28,12 @@ timeModels = zeros(M*N,K+C*K+K,nFrames);
 % figure, fore_handle = axes; %For the processed foreground
 % figure, result_handle = axes; %For the result image
 
+% if using the particle filter, initialise it with the models and particle
+% numbers before starting the video
+if filter
+    params = pf_defaults();
+    pf = pf_class(params.nparticles,params.process_noise, params.measurement_noise);
+end
 
 i=0;
 %For each frame
@@ -39,11 +45,11 @@ while ~isDone(videoObj)
     frame = step(videoObj);
     %Compute foreground
     [foreground,background,model] = mog_batch(single(frame),parameters);
-%     profile viewer;
-%     pause;
+    %     profile viewer;
+    %     pause;
     timeModels(:,:,i) = model;
     t = toc;
-
+    
     display(sprintf('Time MoG: %.3f',t));
     
     figure;
@@ -53,7 +59,7 @@ while ~isDone(videoObj)
     subplot(122)
     imshow(foreground,'InitialMagnification','fit');
     title('Foreground')
-%     title(sprintf('Foreground (t= %f s)',t));
+    %     title(sprintf('Foreground (t= %f s)',t));
     
     %% Morphology
     foreground = morphology(foreground);
@@ -61,7 +67,7 @@ while ~isDone(videoObj)
     imshow(foreground);
     title('Processed foreground');
     
-    %% Blob extraction    
+    %% Blob extraction
     %We output the bounding box and the centroid. Also, we filter those
     %blobs which are too small
     BLOB_SIZE_MIN = 100; %in pixels
@@ -69,28 +75,36 @@ while ~isDone(videoObj)
         'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN);
     [centroid,bbox] = step(blobDetector, logical(foreground)); %[Mx4,Mx2]
     
-    if ~isempty(centroid)
-        measurements = [double(centroid') ; double((bbox(:,3:4))')]; %4xM
-
-        %% Tracking of vehicles
-        switch filter
-            case 0 % Kalman Filter
-                params = kf_config();
-                [trackedObjects] = tracking_kf(measurements,params); %6xM
-            case 1 % Particle Filter            
+    if filter
+        [trackedObjects] = pf.pf_step(1, centroid, bbox);
+        if isempty(trackedObjects)
+            processedFrame=frame;
+        else
+            trackedObjects(1:2,:) = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
+            processedFrame = insertShape(frame,'Rectangle',(trackedObjects(1:4,:))','Color','red');
         end
-        %For displaying purposes, transform the centroid to the top-left
-        %corner by subtracting the width and height
-        trackedObjects(1:2,:) = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2; 
-        %% Display over the image
-        %Bounding box
-        processedFrame = insertShape(frame,'Rectangle',(trackedObjects(1:4,:))','Color','red');
-        %Centroid 
+    else
+        if ~isempty(centroid)
+            measurements = [double(centroid') ; double((bbox(:,3:4))')]; %4xM
+            
+            %% Tracking of vehicles
+            params = kf_config();
+            [trackedObjects] = tracking_kf(measurements,params); %6xM
+            %For displaying purposes, transform the centroid to the top-left
+            %corner by subtracting the width and height
+            trackedObjects(1:2,:) = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
+            %% Display over the image
+            %Bounding box
+            processedFrame = insertShape(frame,'Rectangle',(trackedObjects(1:4,:))','Color','red');
+            %Centroid
+            
+            %Velocity
+        else %No vehicles => just show frame
+            processedFrame = frame;
+        end
+    end
+    
 
-        %Velocity
-    else %No vehicles => just show frame
-        processedFrame = frame;
-    end    
     %% Show the result
     figure;
     imshow(processedFrame);
