@@ -42,6 +42,7 @@ classdef kf_class < handle
 
             if(available)
                 [obj.mu, obj.sigma] = obj.kf_update(mu_bar,sigma_bar,S,nu);
+                obj.noUpdateCounter = 0; %Restart counter!!
             else
                 obj.mu = mu_bar;
                 obj.sigma = sigma_bar;
@@ -65,7 +66,6 @@ classdef kf_class < handle
                 0 0 0  1  0 0;
                 0 0 0  0  1 0;
                 0 0 0  0  0 1];
-            
             mu_bar = A*mu;
             sigma_bar = A*sigma*A' + R;                    
         end
@@ -79,7 +79,7 @@ classdef kf_class < handle
 %                     measurements:       4xn    
 %             Outputs:
 %                     z:                  4x1
-%                     outliers:           nx1
+%                     outliers:           nx1            
             n = size(measurements,2);
             N = size(measurements,1); %Dimension
             
