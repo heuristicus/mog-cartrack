@@ -133,7 +133,7 @@ classdef pf_class < handle
                     % Compute the mean of each cluster
                     mn = [];
                     for i=1:size(centroids,1)
-                        cluster_particles = obj.S(1:4,idx==i);
+                        cluster_particles = obj.S(1:6,idx==i);
                         mn = [mn mean(cluster_particles,2)];
                     end
                     obj.cluster_means = {mn};
@@ -187,14 +187,20 @@ classdef pf_class < handle
                 % centre from the total number to be initialised
                 remaining_particles = remaining_particles - nparticles;
                 % define the x y positions and the corresponding
-                % directional velocities for each particle
+                % directional velocities for each particle, as well as the
+                % width and height of the bounding box for that particle,
+                % which we obtain from the measurement
                 if gaussian_position
                     maxlen = max(bboxes(i,3), bboxes(i,4));
                     initpart = [randn(1,nparticles) * maxlen + measurements(1,i);
-                        randn(1,nparticles) *maxlen + measurements(2,i)];
+                                randn(1,nparticles) *maxlen + measurements(2,i);
+                                bboxes(i,3) * ones(1,nparticles);
+                                bboxes(i,4) * ones(1,nparticles)];
                 else
                     initpart = [rand(1,nparticles) * bboxes(i,3) + bboxes(i,1);
-                        rand(1,nparticles) * bboxes(i,4) + bboxes(i,2)];
+                                rand(1,nparticles) * bboxes(i,4) + bboxes(i,2);
+                                bboxes(i,3) * ones(1,nparticles);
+                                bboxes(i,4) * ones(1,nparticles);];
                 end
                 
                 % if the velocities are nonzero for this measurement (i.e.
@@ -290,14 +296,15 @@ classdef pf_class < handle
             % propagate particles based on their current position, the two velocity
             % components and the time elapsed. We assume that the velocity
             % is modified only by the noise.
-            obj.S(1:2,:) = [obj.S(1,:) + obj.S(3,:) * dt;
-                            obj.S(2,:) + obj.S(4,:) * dt];
+            obj.S(1:2,:) = [obj.S(1,:) + obj.S(5,:) * dt;
+                            obj.S(2,:) + obj.S(6,:) * dt];
             % generate random noise and multiply it by the process noise covariance
-            rn = randn(obj.total_particles,4) * obj.R;
+            rn = randn(obj.total_particles,6) * obj.R;
+            size(obj.S)
+            size(rn)
             % add a column of zeros and take the transpose to make a 5xM matrix
             noise = [rn zeros(obj.total_particles,1)]';
             size(noise)
-            size(obj.S)
             % add the noise to each particle
             obj.S = obj.S + noise;
         end
@@ -338,18 +345,18 @@ classdef pf_class < handle
             % probability having made the measurement provided.
             p = diag(obj.normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
             p = p/sum(p);
-            obj.S(5,:)=p;
+            obj.S(7,:)=p;
         end
         function pf_resample(obj)
             % cumulative sum of the particle weights
-            cdf = cumsum(obj.S(5,:));
+            cdf = cumsum(obj.S(7,:));
             % initial random value between 0 and 1/resampled_particles. Do
             % not use 1/total_particles, because that would mean that
             % particles at the end of the list are skipped each time
             r_0 = rand / obj.resampled_particles;
             % initialise a new particle matrix in which to store selected
             % particles.
-            new_particles = zeros(5,obj.resampled_particles);
+            new_particles = zeros(7,obj.resampled_particles);
             % loop over all particles and choose the particle to carry over
             % to the next timestep
             for m = 1 : obj.resampled_particles
@@ -361,7 +368,7 @@ classdef pf_class < handle
             end
             % the new particles are all given a uniform weight according to
             % the total number of particles which will be in the set
-            new_particles(5,:) = 1/obj.total_particles*ones(1,obj.resampled_particles);
+            new_particles(7,:) = 1/obj.total_particles*ones(1,obj.resampled_particles);
             % put the new particles into the object
             obj.S = new_particles;
         end

@@ -164,16 +164,16 @@ for i = 2:nsteps
     %bboxes{1,i};
 end
 
-process_noise = diag([0.3 0.3 0.2 0.2]);
-measurement_noise = diag([0.1 0.1]);
+process_noise = diag([0.3 0.3 0.1 0.1 0.2 0.2]);
+measurement_noise = diag([0.3 0.3]);
 
-pf = pf_class(1000, process_noise, measurement_noise, measurements{1}, bboxes{1});
+pf = pf_class(200, process_noise, measurement_noise, measurements{1}, bboxes{1});
 
 figure
 for j=1:nsteps
     clf
     hold on
-    quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:),pf.S(4,:))
+    quiver(pf.S(1,:),pf.S(2,:),pf.S(5,:),pf.S(6,:))
     for i=1:size(bboxes{j},1)
         rectangle('position', bboxes{j}(i,:))
         %                 row------|
