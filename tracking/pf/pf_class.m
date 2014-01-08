@@ -279,7 +279,7 @@ classdef pf_class < handle
 
             % compute clusters using kmeans - these should correspond to
             % the number of objects in the scene
-            [idx] = kmeans(obj.S(1:2,:)', size(centroids,1));
+            [idx] = kmeans(obj.S(1:2,:)', size(centroids,1),'emptyaction','singleton','replicates',5);
             % Compute the mean of each cluster
             mn = [];
             for i=1:size(centroids,1)

@@ -37,8 +37,13 @@ end
 
 i=0;
 %For each frame
+handle=figure
+
+% writerObj = VideoWriter('carvideo.avi');
+% writerObj.FrameRate = 5;
+% open(writerObj)
+
 while ~isDone(videoObj)
-    close all;
     
     i = i+1;
     tic;
@@ -52,18 +57,17 @@ while ~isDone(videoObj)
     
     display(sprintf('Time MoG: %.3f',t));
     
-    figure;
-    subplot(121)
+    subplot(221)
     imshow(frame);
     title(sprintf('Frame %d',i));
-    subplot(122)
+    subplot(222)
     imshow(foreground,'InitialMagnification','fit');
     title('Foreground')
     %     title(sprintf('Foreground (t= %f s)',t));
     
     %% Morphology
     foreground = morphology(foreground);
-    figure;
+    subplot(223)
     imshow(foreground);
     title('Processed foreground');
     
@@ -101,16 +105,19 @@ while ~isDone(videoObj)
         processedFrame = insertShape(processedFrame,'Line',[trackedObjects(1:2,:)' (trackedObjects(1:2,:) + trackedObjects(5:6,:)*5)'],'Color','green');
     end
     
-
+%     writeVideo(writerObj,processedFrame)
+    
     %% Show the result
-    figure;
+    subplot(224)
     imshow(processedFrame);
     title(sprintf('Tracked vehicles, frame %d',i));
     
     t2 = toc;
     display(sprintf('Time per frame: %.3f s',t2));
-    pause;
+    pause(0.1)
 end
+
+%close(writerObj)
 
 end
 
