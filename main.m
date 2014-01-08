@@ -77,31 +77,28 @@ while ~isDone(videoObj)
     
     if filter
         [trackedObjects] = pf.pf_step(1, centroid, bbox);
-        if isempty(trackedObjects)
-            processedFrame=frame;
-        else
-            trackedObjects(1:2,:) = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
-            processedFrame = insertShape(frame,'Rectangle',(trackedObjects(1:4,:))','Color','red');
-        end
+
     else
         if ~isempty(centroid)
             measurements = [double(centroid') ; double((bbox(:,3:4))')]; %4xM
             
-            %% Tracking of vehicles
+            % Tracking of vehicles
             params = kf_config();
             [trackedObjects] = tracking_kf(measurements,params); %6xM
-            %For displaying purposes, transform the centroid to the top-left
-            %corner by subtracting the width and height
-            trackedObjects(1:2,:) = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
-            %% Display over the image
-            %Bounding box
-            processedFrame = insertShape(frame,'Rectangle',(trackedObjects(1:4,:))','Color','red');
-            %Centroid
-            
-            %Velocity
-        else %No vehicles => just show frame
-            processedFrame = frame;
+        else
+            trackedObjects = [];
         end
+    end
+    
+    if isempty(trackedObjects)
+        processedFrame=frame;
+    else
+        %For displaying purposes, transform the centroid to the top-left
+        %corner by subtracting the width and height
+        modifiedCentres = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
+        processedFrame = insertShape(frame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
+        processedFrame = insertShape(processedFrame,'Circle',[trackedObjects(1:2,:)' 2 * ones(size(trackedObjects,2),1)],'Color','green');
+        processedFrame = insertShape(processedFrame,'Line',[trackedObjects(1:2,:)' (trackedObjects(1:2,:) + trackedObjects(5:6,:)*5)'],'Color','green');
     end
     
 
