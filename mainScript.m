@@ -6,6 +6,6 @@ load('myBreakpoints.mat');
 dbstop(s);
 
 
-videoFile = 'visiontraffic.avi';
-filter = 1; %Kalman Filter
+videoFile = 'viptraffic.avi';
+filter = 0; %KF = 0, PF = 1
 main(videoFile,filter);

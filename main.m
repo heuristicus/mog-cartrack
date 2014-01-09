@@ -21,7 +21,7 @@ parameters = mog_configure();
 K = parameters.K;
 
 %Allocate memory for all the models in a 3D array.
-timeModels = zeros(M*N,K+C*K+K,nFrames);
+%timeModels = zeros(M*N,K+C*K+K,nFrames);
 
 %Allocate figures
 % figure, initial_handle=axes; %For the initial image and MoG
@@ -52,7 +52,7 @@ while ~isDone(videoObj)
     [foreground,background,model] = mog_batch(single(frame),parameters);
     %     profile viewer;
     %     pause;
-    timeModels(:,:,i) = model;
+    %timeModels(:,:,i) = model;
     t = toc;
     
     display(sprintf('Time MoG: %.3f',t));
@@ -78,6 +78,12 @@ while ~isDone(videoObj)
     blobDetector = vision.BlobAnalysis('BoundingBoxOutputPort', true, 'CentroidOutputPort', true,...
         'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN);
     [centroid,bbox] = step(blobDetector, logical(foreground)); %[Mx4,Mx2]
+    
+%         blobs = insertShape(frame,'Rectangle',[bbox],'Color','blue');
+%         blobs = insertShape(blobs,'Circle',[centroid 2*ones(size(centroid,1),1)],'Color','green');
+%         figure
+%         imshow(blobs)
+%     
     
     if filter
         [trackedObjects] = pf.pf_step(1, centroid, bbox);
