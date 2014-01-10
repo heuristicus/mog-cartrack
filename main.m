@@ -53,6 +53,7 @@ while ~isDone(videoObj)
     %     profile viewer;
     %     pause;
     %timeModels(:,:,i) = model;
+
     t = toc;
     
     display(sprintf('Time MoG: %.3f',t));
@@ -74,9 +75,12 @@ while ~isDone(videoObj)
     %% Blob extraction
     %We output the bounding box and the centroid. Also, we filter those
     %blobs which are too small
-    BLOB_SIZE_MIN = 100; %in pixels
+    BLOB_SIZE_MIN = round((N/20)^2); %in pixels
+    BLOB_SIZE_MAX = round((N/2)^2); %in pixels
+    
     blobDetector = vision.BlobAnalysis('BoundingBoxOutputPort', true, 'CentroidOutputPort', true,...
-        'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN);
+        'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN,'MaximumBlobArea',BLOB_SIZE_MAX,...
+        'ExcludeBorderBlobs',true);
     [centroid,bbox] = step(blobDetector, logical(foreground)); %[Mx4,Mx2]
     
 %         blobs = insertShape(frame,'Rectangle',[bbox],'Color','blue');
@@ -109,6 +113,9 @@ while ~isDone(videoObj)
         processedFrame = insertShape(frame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
         processedFrame = insertShape(processedFrame,'Circle',[trackedObjects(1:2,:)' 2 * ones(size(trackedObjects,2),1)],'Color','green');
         processedFrame = insertShape(processedFrame,'Line',[trackedObjects(1:2,:)' (trackedObjects(1:2,:) + trackedObjects(5:6,:)*5)'],'Color','green');
+%         processedFrame =
+%         insertMarker(processedFrame,pf.S(1:2,:)','o','Size',1); %Show
+%         particles
     end
     
 %     writeVideo(writerObj,processedFrame)
@@ -120,7 +127,8 @@ while ~isDone(videoObj)
     
     t2 = toc;
     display(sprintf('Time per frame: %.3f s',t2));
-    pause(0.1)
+%     pause(0.1)
+    pause;
 end
 
 %close(writerObj)

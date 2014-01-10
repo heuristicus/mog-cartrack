@@ -5,7 +5,7 @@ function [parameters] = pf_defaults()
 % noise on x y boxw boxh xv yv
 process_noise = diag([10 10 5 5 5 5]);
 % noise on x and y measurements
-measurement_noise = diag([10 10]);
+measurement_noise = diag([10 10 10 10]);
 nparticles = 1000;
 
 parameters = struct('process_noise',process_noise,'measurement_noise',measurement_noise,'nparticles',nparticles);

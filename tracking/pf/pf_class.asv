@@ -84,7 +84,7 @@ classdef pf_class < handle
                 % velocity is sampled if the velocity from a measurement is
                 % zero
                 if nargin < 7
-                    vel_std = 10;
+                    vel_std = 1;
                 end
                 
                 if nargin < 8
@@ -100,7 +100,7 @@ classdef pf_class < handle
                 obj.R = process_model;
                 obj.Q = measurement_model;
                 obj.Qinv = inv(measurement_model);
-                obj.normalisation = 1/(((2*pi)^2)*sqrt(det(obj.Q)));
+                obj.normalisation = 1/((2*pi*sqrt(det(obj.Q)));
                 obj.total_particles = num_particles;
                 obj.measurement_particles = round(measurement_particle_prop * obj.total_particles);
                 obj.resampled_particles = obj.total_particles - obj.measurement_particles;
@@ -213,14 +213,14 @@ classdef pf_class < handle
                 if sum(measurements(3:4,i)) == 0
                     initpart = [initpart;
                                 % velocities randomly selected
-                                vel_std*randn(1,nparticles);
-                                vel_std*randn(1,nparticles);
+                                randn(1,nparticles);
+                                randn(1,nparticles);
                                 ones(1,nparticles) * 1/obj.total_particles];
                 else
                     initpart = [initpart;
                                 % velocities based on previous value
-                                vel_std*randn(1,nparticles) + measurements(3,i);
-                                vel_std*randn(1,nparticles) + measurements(4,i);
+                                randn(1,nparticles) + measurements(3,i);
+                                randn(1,nparticles) + measurements(4,i);
                                 ones(1,nparticles) * 1/obj.total_particles];
                 end
                
@@ -260,7 +260,7 @@ classdef pf_class < handle
             if obj.stepnum > 2 && reinitialised ~= 1
                 prev_measurements = obj.measurements{1, obj.stepnum - 1};
                 prev_bboxes = obj.bboxes{1, obj.stepnum -1};
-                part = obj.init_particles(prev_measurements, prev_bboxes, obj.measurement_particles,obj.vel_std);
+                part = obj.init_particles(prev_measurements, prev_bboxes, obj.measurement_particles);
                 obj.S = [obj.S part];
             end
             
@@ -270,7 +270,7 @@ classdef pf_class < handle
             
             % reweight the particles according to their proximity to the
             % nearest measurement
-            obj.pf_weight([centroids,bboxes(:,3),bboxes(:,4)]);        
+            obj.pf_weight(centroids);        
             
             obj.bboxes{1,obj.stepnum} = bboxes;
             obj.measurements{1,obj.stepnum} = [centroids zeros(size(centroids,1),2)]';
@@ -284,11 +284,7 @@ classdef pf_class < handle
             mn = [];
             for i=1:size(centroids,1)
                 cluster_particles = obj.S(1:6,idx==i);
-                %For some strange reason, kmeans creates clusters with no
-                %particles => don't take them into consideration.
-                if ~isempty(cluster_particles) 
-                    mn = [mn mean(cluster_particles,2)];
-                end
+                mn = [mn mean(cluster_particles,2)];
             end
             obj.cluster_means{1,obj.stepnum} = mn;
             trackedObjects = mn;
@@ -325,13 +321,13 @@ classdef pf_class < handle
             % second. The last two rows contain the values which correspond
             % to the innovation in x and y
             minmat = [10000 * ones(1,obj.total_particles);
-                      -1 * ones(5,obj.total_particles)];
+                      -1 * ones(3,obj.total_particles)];
 
             for i=1:size(centroids,1)
                 % super simple distance computation - essentially the
                 % city-block distance. We don't care about the actual
                 % distance, only need to know which particles are closest
-                xydist = obj.S(1:4,:) - repmat(centroids(i,:)',1,obj.total_particles);
+                xydist = obj.S(1:2,:) - repmat(centroids(i,:)',1,obj.total_particles);
                 distances=sum(abs(xydist),1);
                 smaller = distances < minmat(1,:);
                 
@@ -342,7 +338,7 @@ classdef pf_class < handle
                                         xydist(:,smaller==1)];
             end
             
-            nu = minmat(3:6,:);
+            nu = minmat(3:4,:);
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
             p = diag(obj.normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
