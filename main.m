@@ -14,6 +14,9 @@ M = size(img0,1);
 N = size(img0,2);
 C = size(img0,3);
 
+% array for the processing times
+tms=[];
+
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 5, ...
     'NumTrainingFrames', 50);
 %Get parameters
@@ -36,8 +39,9 @@ if filter
 end
 
 i=0;
+
 %For each frame
-handle=figure
+figure
 
 % writerObj = VideoWriter('carvideo.avi');
 % writerObj.FrameRate = 5;
@@ -49,7 +53,7 @@ while ~isDone(videoObj)
     tic;
     frame = step(videoObj);
     %Compute foreground
-    [foreground,background,model] = mog_batch(single(frame),parameters);
+    [foreground] = mog_batch(single(frame),parameters);
     %     profile viewer;
     %     pause;
     %timeModels(:,:,i) = model;
@@ -58,20 +62,8 @@ while ~isDone(videoObj)
     
     display(sprintf('Time MoG: %.3f',t));
     
-    subplot(221)
-    imshow(frame);
-    title(sprintf('Frame %d',i));
-    subplot(222)
-    imshow(foreground,'InitialMagnification','fit');
-    title('Foreground')
-    %     title(sprintf('Foreground (t= %f s)',t));
-    
-    %% Morphology
     foreground = morphology(foreground);
-    subplot(223)
-    imshow(foreground);
-    title('Processed foreground');
-    
+
     %% Blob extraction
     %We output the bounding box and the centroid. Also, we filter those
     %blobs which are too small
@@ -120,16 +112,29 @@ while ~isDone(videoObj)
     
 %     writeVideo(writerObj,processedFrame)
     
-    %% Show the result
+    t2 = toc;
+    display(sprintf('Time per frame: %.3f s',t2));
+    tms = [tms t2];
+
+    % Show the result
+    subplot(221)
+    imshow(frame);
+    title(sprintf('Frame %d',i));
+    subplot(222)
+    imshow(foreground,'InitialMagnification','fit');
+    title('Foreground')
+    % Morphology
+    subplot(223)
+    imshow(foreground);
+    title('Processed foreground');
     subplot(224)
     imshow(processedFrame);
     title(sprintf('Tracked vehicles, frame %d',i));
     
-    t2 = toc;
-    display(sprintf('Time per frame: %.3f s',t2));
-%     pause(0.1)
-    pause;
+    pause(0.1)
 end
+
+fprintf('average processing time per frame: %.3f s\n', mean(tms));
 
 %close(writerObj)
 
