@@ -17,6 +17,9 @@ classdef pf_class < handle
         Q
         % noise model inverse
         Qinv
+        % repeated diagonals of Qinv, used in a scalar multiplication to
+        % speed thing up
+        bigQ
         % number of particles
         total_particles
         % number of particles which are resampled from the original
@@ -106,6 +109,7 @@ classdef pf_class < handle
                 obj.resampled_particles = obj.total_particles - obj.measurement_particles;
                 obj.vel_std = vel_std;
                 obj.particle_min_limit = particle_min_limit;
+                obj.bigQ=repmat(diag(obj.Qinv),1,obj.total_particles);
                 
                 % if we are not passed any centroids or bboxes, just
                 % initialise the parameters, not the particles. Indicate
@@ -345,7 +349,7 @@ classdef pf_class < handle
             nu = minmat(3:6,:);
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
-            p = diag(obj.normalisation*exp(-0.5*nu'*obj.Qinv*nu))';
+            p = obj.normalisation*exp(sum(-0.5*nu.*obj.bigQ.*nu,1))';
             p = p/sum(p);
             obj.S(7,:)=p;
         end
