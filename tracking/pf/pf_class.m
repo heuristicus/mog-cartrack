@@ -56,7 +56,7 @@ classdef pf_class < handle
         normalisation
         initialised
         %To decide whether to use systematic(0) or stratified(1) resampling
-        resampling = 1;
+        resampling = 0;
     end
     
     methods
@@ -249,7 +249,7 @@ classdef pf_class < handle
                 obj.bboxes{1,obj.stepnum} = [];
                 obj.measurements{1,obj.stepnum} = [];
                 obj.initialised = 0;
-                trackedObjects=[]
+                trackedObjects=[];
                 return
             end
             
@@ -352,11 +352,18 @@ classdef pf_class < handle
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
             p = obj.normalisation*exp(sum(-0.5*nu.*obj.bigQ.*nu,1))';
-            p = p/sum(p);
+            
+            ps = sum(p);
+            % if the weights are all zero, then assign everything to be
+            % uniformly weighted
+            if ps < 1e-10
+                p=ones(1,size(obj.S,2))/obj.total_particles;
+            else
+                p = p/ps;
+            end
             obj.S(7,:)=p;
         end
         function pf_resample(obj,type, nCentroids)
-            nCentroids
             if type %Stratified resampling
                  %First, get clusters
                   % compute clusters using kmeans - these should correspond to
@@ -386,28 +393,27 @@ classdef pf_class < handle
         end
         
         function new_particles = systematic_resampling(obj,particles)
-                cdf = cumsum(particles(7,:))/sum(particles(7,:));
-                max(cdf)
-                nParticles = round(sum(particles(7,:))*obj.resampled_particles);
-                % initial random value between 0 and 1/resampled_particles. Do
-                % not use 1/total_particles, because that would mean that
-                % particles at the end of the list are skipped each time
-                r_0 = rand / nParticles;
-                % initialise a new particle matrix in which to store selected
-                % particles.
-                new_particles = zeros(7,nParticles);
-                % loop over all particles and choose the particle to carry over
-                % to the next timestep
-                for m = 1 : nParticles
-                    % the new particle is the one corresponding to the index
-                    % in the cdf which exceeds the current random number
-                    new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
-                    % the random number is incremented by 1/M each time
-                    r_0 = r_0 + 1/nParticles;
-                end
-                % the new particles are all given a uniform weight according to
-                % the total number of particles which will be in the set
-                new_particles(7,:) = 1/obj.total_particles*ones(1,nParticles);
+            cdf = cumsum(particles(7,:))
+            nParticles = obj.resampled_particles;
+            % initial random value between 0 and 1/resampled_particles. Do
+            % not use 1/total_particles, because that would mean that
+            % particles at the end of the list are skipped each time
+            r_0 = rand / nParticles;
+            % initialise a new particle matrix in which to store selected
+            % particles.
+            new_particles = zeros(7,nParticles);
+            % loop over all particles and choose the particle to carry over
+            % to the next timestep
+            for m = 1 : nParticles
+                % the new particle is the one corresponding to the index
+                % in the cdf which exceeds the current random number
+                new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
+                % the random number is incremented by 1/M each time
+                r_0 = r_0 + 1/nParticles;
+            end
+            % the new particles are all given a uniform weight according to
+            % the total number of particles which will be in the set
+            new_particles(7,:) = 1/obj.total_particles*ones(1,nParticles);
         end
     end
 end

@@ -59,6 +59,7 @@ while ~isDone(videoObj)
     
     foreground = morphology(foreground0);
 
+    tic;
     %% Blob extraction
     %We output the bounding box and the centroid. Also, we filter those
     %blobs which are too small
@@ -74,7 +75,7 @@ while ~isDone(videoObj)
 %         figure
 %         imshow(blobs)
 %     
-    tic;
+    %tic;
     if filter
         [trackedObjects] = pf.pf_step(1, centroid, bbox);
 
@@ -89,8 +90,10 @@ while ~isDone(videoObj)
             trackedObjects = [];
         end
     end
-    t = toc;
-    display(sprintf('Time filter: %.3f',t));
+
+%     tfilter = toc;
+%     fprintf('Filter time: %.3f\n',tfilter);
+%     tms = [tms tfilter];
     
     if isempty(trackedObjects)
         processedFrame=frame;
@@ -98,18 +101,18 @@ while ~isDone(videoObj)
         %For displaying purposes, transform the centroid to the top-left
         %corner by subtracting the width and height
         modifiedCentres = trackedObjects(1:2,:)-trackedObjects(3:4,:)/2;
-        processedFrame = insertShape(frame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
+        
+        if filter
+            processedFrame = insertMarker(frame,pf.S(1:2,:)','o','Size',1,'color','blue'); %Show particles
+        end
+        processedFrame = insertShape(processedFrame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
         processedFrame = insertShape(processedFrame,'Circle',[trackedObjects(1:2,:)' 2 * ones(size(trackedObjects,2),1)],'Color','green');
         processedFrame = insertShape(processedFrame,'Line',[trackedObjects(1:2,:)' (trackedObjects(1:2,:) + trackedObjects(5:6,:)*5)'],'Color','green');
-        processedFrame = insertMarker(processedFrame,pf.S(1:2,:)','o','Size',1); %Show particles
+
     end
     
 %     writeVideo(writerObj,processedFrame)
     
-%     t2 = toc;
-%     display(sprintf('Time per frame: %.3f s',t2));
-%     tms = [tms t2];
-
     % Show the result
     figure(1);
     subplot(221)
@@ -125,9 +128,8 @@ while ~isDone(videoObj)
     subplot(224)
     imshow(processedFrame);
     title(sprintf('Tracked vehicles, frame %d',i));
-    
 %     profile viewer
-    pause
+    pause(0.1)
     
     
 end

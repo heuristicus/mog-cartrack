@@ -73,7 +73,7 @@ pf.measurements
 plot(pf.measurements{1,i}(1), pf.measurements{1,i}(2), 'go')
 quiver(pf.S(1,:),pf.S(2,:),pf.S(3,:), pf.S(4,:))
 quiver(pf.cluster_means{1,i}(1), pf.cluster_means{1,i}(2), pf.cluster_means{1,i}(3), pf.cluster_means{1,i}(4),'r')
-plot(pf.cloud_mean(1,i), pf.cloud_mean(2,i), 'ro')
+plot(pf.cluster_means{1,i}(1), pf.cluster_means{1,i}(2), 'ro')
 axis([0 max(x) 0 max(y)])
 % the filter is initialised using the first measurement, so use the i+1th
 % measurement at each timestep
@@ -165,7 +165,7 @@ for i = 2:nsteps
 end
 
 process_noise = diag([0.3 0.3 0.1 0.1 0.3 0.3]);
-measurement_noise = diag([0.3 0.3]);
+measurement_noise = diag([0.3 0.3 0.3 0.3]);
 
 pf = pf_class(200, process_noise, measurement_noise, measurements{1}, bboxes{1});
 
@@ -215,47 +215,9 @@ for i=1:nsteps
 end
 
 
-%% test the particle filter initialisation with blob detection output
-close all
-foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...
-    'NumTrainingFrames', 1);
-
-videoReader = vision.VideoFileReader('viptraffic.avi');
-
-pf = pf_class(1000, process_noise, measurement_noise);
-
-process_noise = diag([0.3 0.3 0.2 0.2]);
-measurement_noise = diag([0.1 0.1]);
-
-figure
-for i = 1:200
-    frame = step(videoReader); % read the next video frame
-    subplot(231)
-    imshow(frame)
-    foreground = step(foregroundDetector, frame);
-    subplot(232)    
-    imshow(foreground,'InitialMagnification','fit')
-        
-    %Clean
-    se = strel('square', 3);
-    filledForeground = imfill(imdilate(foreground,se),'holes');
-
-    filteredForeground = imopen(filledForeground, se);
-    subplot(233)
-    imshow(filteredForeground); title('Clean Foreground');
-    
-    subplot(235)
-    imshow(filledForeground);title('Filled Foreground');
-    %Extract blobs
-    blobAnalysis = vision.BlobAnalysis('MinimumBlobArea', 150);
-    %blobAnalysis.AreaOutputPort = false;
-    [area, centroid, bbox] = step(blobAnalysis, filteredForeground);
-    bboxes = insertShape(frame, 'Rectangle', bbox, 'Color', 'green');
-    
-    subplot(234)
-    imshow(bboxes)
-    
-    pf.pf_step(1,centroid,bbox);
-    
-    pause(0.1)
-end
+%%
+Q=diag([1 1 1 1])
+normalisation=1/((2*pi)^2*det(Q)^1/2)
+nu=[0 0 0 0]'
+expres=exp(-0.5*nu'*Qinv*nu)
+normres=expres*normalisation
