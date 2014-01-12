@@ -4,8 +4,13 @@ function [] = main(videoFile,filter)
 profile clear; profile on;
 
 %Read the video
+tic;
 videoObj = vision.VideoFileReader(videoFile); %To get the frames (better for MoG)
+tv1 = toc;
+tic;
 videoInfoObj = VideoReader(videoFile); %To get video info
+tv2 = toc;
+display(sprintf('Time 1: %.3f s, Time 2: %.3f s',tv1,tv2));
 
 %Get video information
 nFrames = videoInfoObj.NumberOfFrames;
@@ -13,23 +18,12 @@ img0 = read(videoInfoObj);
 M = size(img0,1);
 N = size(img0,2);
 C = size(img0,3);
-
+RESIZE = 1; %1 = No resizing, 0.5 = image resized to a half
 % array for the processing times
 tms=[];
 
-foregroundDetector = vision.ForegroundDetector('NumGaussians', 5, ...
-    'NumTrainingFrames', 50);
 %Get parameters
 parameters = mog_configure();
-K = parameters.K;
-
-%Allocate memory for all the models in a 3D array.
-%timeModels = zeros(M*N,K+C*K+K,nFrames);
-
-%Allocate figures
-% figure, initial_handle=axes; %For the initial image and MoG
-% figure, fore_handle = axes; %For the processed foreground
-% figure, result_handle = axes; %For the result image
 
 % if using the particle filter, initialise it with the models and particle
 % numbers before starting the video
@@ -41,8 +35,7 @@ end
 i=0;
 
 %For each frame
-figure
-
+figure;
 % writerObj = VideoWriter('carvideo.avi');
 % writerObj.FrameRate = 5;
 % open(writerObj)
@@ -50,19 +43,21 @@ figure
 while ~isDone(videoObj)
     
     i = i+1;
-    tic;
+%     tic;
     frame = step(videoObj);
-    %Compute foreground
-    [foreground] = mog_batch(single(frame),parameters);
-    %     profile viewer;
-    %     pause;
-    %timeModels(:,:,i) = model;
+    if RESIZE ~= 1
+       frame = imresize(frame,RESIZE); 
+    end
 
-    t = toc;
+    %Compute foreground
+    [foreground0] = mog_batch(single(frame),parameters);
+
+% 
+%     t = toc;
+%     
+%     display(sprintf('Time MoG: %.3f',t));
     
-    display(sprintf('Time MoG: %.3f',t));
-    
-    foreground = morphology(foreground);
+    foreground = morphology(foreground0);
 
     %% Blob extraction
     %We output the bounding box and the centroid. Also, we filter those
@@ -71,8 +66,7 @@ while ~isDone(videoObj)
     BLOB_SIZE_MAX = round((N/2)^2); %in pixels
     
     blobDetector = vision.BlobAnalysis('BoundingBoxOutputPort', true, 'CentroidOutputPort', true,...
-        'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN,'MaximumBlobArea',BLOB_SIZE_MAX,...
-        'ExcludeBorderBlobs',true);
+        'AreaOutputPort', false,'MinimumBlobArea', BLOB_SIZE_MIN,'MaximumBlobArea',BLOB_SIZE_MAX);
     [centroid,bbox] = step(blobDetector, logical(foreground)); %[Mx4,Mx2]
     
 %         blobs = insertShape(frame,'Rectangle',[bbox],'Color','blue');
@@ -80,7 +74,7 @@ while ~isDone(videoObj)
 %         figure
 %         imshow(blobs)
 %     
-    
+    tic;
     if filter
         [trackedObjects] = pf.pf_step(1, centroid, bbox);
 
@@ -95,6 +89,8 @@ while ~isDone(videoObj)
             trackedObjects = [];
         end
     end
+    t = toc;
+    display(sprintf('Time filter: %.3f',t));
     
     if isempty(trackedObjects)
         processedFrame=frame;
@@ -105,23 +101,22 @@ while ~isDone(videoObj)
         processedFrame = insertShape(frame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
         processedFrame = insertShape(processedFrame,'Circle',[trackedObjects(1:2,:)' 2 * ones(size(trackedObjects,2),1)],'Color','green');
         processedFrame = insertShape(processedFrame,'Line',[trackedObjects(1:2,:)' (trackedObjects(1:2,:) + trackedObjects(5:6,:)*5)'],'Color','green');
-%         processedFrame =
-%         insertMarker(processedFrame,pf.S(1:2,:)','o','Size',1); %Show
-%         particles
+        processedFrame = insertMarker(processedFrame,pf.S(1:2,:)','o','Size',1); %Show particles
     end
     
 %     writeVideo(writerObj,processedFrame)
     
-    t2 = toc;
-    display(sprintf('Time per frame: %.3f s',t2));
-    tms = [tms t2];
+%     t2 = toc;
+%     display(sprintf('Time per frame: %.3f s',t2));
+%     tms = [tms t2];
 
     % Show the result
+    figure(1);
     subplot(221)
     imshow(frame);
     title(sprintf('Frame %d',i));
     subplot(222)
-    imshow(foreground,'InitialMagnification','fit');
+    imshow(foreground0,'InitialMagnification','fit');
     title('Foreground')
     % Morphology
     subplot(223)
@@ -131,7 +126,10 @@ while ~isDone(videoObj)
     imshow(processedFrame);
     title(sprintf('Tracked vehicles, frame %d',i));
     
-    pause(0.1)
+%     profile viewer
+    pause
+    
+    
 end
 
 fprintf('average processing time per frame: %.3f s\n', mean(tms));

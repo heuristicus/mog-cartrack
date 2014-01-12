@@ -27,6 +27,5 @@ for i=1:M
     outliers = outliers & outliers_i;    
 end
 
-
 end
 

@@ -55,6 +55,8 @@ classdef pf_class < handle
         % the normalisation constant used when reweighting particles
         normalisation
         initialised
+        %To decide whether to use systematic(0) or stratified(1) resampling
+        resampling = 1;
     end
     
     methods
@@ -279,7 +281,7 @@ classdef pf_class < handle
             obj.bboxes{1,obj.stepnum} = bboxes;
             obj.measurements{1,obj.stepnum} = [centroids zeros(size(centroids,1),2)]';
             
-            obj.pf_resample()
+            obj.pf_resample(obj.resampling,size(centroids,1));
 
             % compute clusters using kmeans - these should correspond to
             % the number of objects in the scene
@@ -346,37 +348,66 @@ classdef pf_class < handle
                                         xydist(:,smaller==1)];
             end
             
-            nu = minmat(3:6,:);
+            nu = minmat(3:6,:); %4xM
             % reweight the particles in the cloud based on their
             % probability having made the measurement provided.
             p = obj.normalisation*exp(sum(-0.5*nu.*obj.bigQ.*nu,1))';
             p = p/sum(p);
             obj.S(7,:)=p;
         end
-        function pf_resample(obj)
-            % cumulative sum of the particle weights
-            cdf = cumsum(obj.S(7,:));
-            % initial random value between 0 and 1/resampled_particles. Do
-            % not use 1/total_particles, because that would mean that
-            % particles at the end of the list are skipped each time
-            r_0 = rand / obj.resampled_particles;
-            % initialise a new particle matrix in which to store selected
-            % particles.
-            new_particles = zeros(7,obj.resampled_particles);
-            % loop over all particles and choose the particle to carry over
-            % to the next timestep
-            for m = 1 : obj.resampled_particles
-                % the new particle is the one corresponding to the index
-                % in the cdf which exceeds the current random number
-                new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
-                % the random number is incremented by 1/M each time
-                r_0 = r_0 + 1/obj.resampled_particles;
+        function pf_resample(obj,type, nCentroids)
+            nCentroids
+            if type %Stratified resampling
+                 %First, get clusters
+                  % compute clusters using kmeans - these should correspond to
+                % the number of objects in the scene
+                [idx] = kmeans(obj.S(1:2,:)', nCentroids,'emptyaction','singleton','replicates',5);
+                % Compute the mean of each cluster
+                new_particles = [];
+                for i=1:nCentroids
+                    cluster_particles = obj.S(:,idx==i)
+                    if ~isempty(cluster_particles);
+                        new_particles = [new_particles obj.systematic_resampling(cluster_particles)];
+                    end
+                end
+                %Check size due to rounding errors
+                if size(new_particles,2) > obj.resampled_particles
+                    %Take the first "total_particles"
+                    new_particles = new_particles(:,1:obj.resampled_particles); 
+                elseif size(new_particles,2) < obj.resampled_particles
+                    diff = obj.resampled_particles -size(new_particles,2)
+                    %Repeat the first "resampled_particles-diff" particles
+                    new_particles = [new_particles(:,1:diff) new_particles];
+                end
+                obj.S = new_particles;  
+            else %Systematic resampling
+                obj.S = obj.systematic_resampling(obj.S);
             end
-            % the new particles are all given a uniform weight according to
-            % the total number of particles which will be in the set
-            new_particles(7,:) = 1/obj.total_particles*ones(1,obj.resampled_particles);
-            % put the new particles into the object
-            obj.S = new_particles;
+        end
+        
+        function new_particles = systematic_resampling(obj,particles)
+                cdf = cumsum(particles(7,:))/sum(particles(7,:));
+                max(cdf)
+                nParticles = round(sum(particles(7,:))*obj.resampled_particles);
+                % initial random value between 0 and 1/resampled_particles. Do
+                % not use 1/total_particles, because that would mean that
+                % particles at the end of the list are skipped each time
+                r_0 = rand / nParticles;
+                % initialise a new particle matrix in which to store selected
+                % particles.
+                new_particles = zeros(7,nParticles);
+                % loop over all particles and choose the particle to carry over
+                % to the next timestep
+                for m = 1 : nParticles
+                    % the new particle is the one corresponding to the index
+                    % in the cdf which exceeds the current random number
+                    new_particles(:,m) = obj.S(:,find(cdf >= r_0,1,'first'));
+                    % the random number is incremented by 1/M each time
+                    r_0 = r_0 + 1/nParticles;
+                end
+                % the new particles are all given a uniform weight according to
+                % the total number of particles which will be in the set
+                new_particles(7,:) = 1/obj.total_particles*ones(1,nParticles);
         end
     end
 end
