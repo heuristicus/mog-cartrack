@@ -1,4 +1,4 @@
-function [filters] = deleteOldKFs(filters)
+function [filters] = deleteOldKFs(filters,height,width)
 %DELETEKFS Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,7 +19,10 @@ filtersToRemove = zeros(M_0,1);
 % If this number of frames exceeds a threshold, we delete the filter
 for i=1:M_0
    kf = filters(i);
-   filtersToRemove(i)= kf.noUpdateCounter >= kf.NO_UPDATE_TIME_MAX;
+   filtersToRemove(i)= kf.noUpdateCounter >= kf.NO_UPDATE_TIME_MAX ||...
+                       kf.mu(1) > width || ...
+                       kf.mu(2) > height|| ...
+                       kf.mu(1) < 0 || kf.mu(2) <0;
 end
 
 %Only preserve the ones that we do NOT delete

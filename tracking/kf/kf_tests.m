@@ -130,7 +130,7 @@ for i = 1:N
     hold on
 
     z = measurements(:,:,i); %4xn
-    trackedObjects = tracking_kf(z,params);
+    trackedObjects = tracking_kf(z,params,L,L);
 
     %Draw measurement
     for j=1:size(z,2)

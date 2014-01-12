@@ -13,7 +13,7 @@ classdef kf_class < handle
         sigma
         % number of frames without updating
         noUpdateCounter
-        NO_UPDATE_TIME_MAX = 10 %Max number of frames we allow not to update
+        NO_UPDATE_TIME_MAX = 2 %Max number of frames we allow not to update
         % time step
         dt
         % Threshold on the Mahalanobis distance
@@ -31,12 +31,12 @@ classdef kf_class < handle
             obj.dt = params.dt;
             obj.lambdaM = chi2inv(params.deltaM,4);
         end
-        function [outliers] = kf_step(obj,measurements)
+        function kf_step(obj,S,nu,outliers)
             
             %----Predict Step----
             [mu_bar, sigma_bar] = obj.kf_predict(obj.mu, obj.sigma,obj.dt,obj.R);            
             %----Associate-----
-            [outliers,S,nu] = obj.kf_associate(mu_bar,sigma_bar,measurements);            
+%             [outliers,S,nu] = obj.kf_associate(mu_bar,sigma_bar,nu);            
             %----Update
             available = ~isempty(find(outliers==0,1)); %At least a measurement is not an outlier
 
@@ -79,7 +79,8 @@ classdef kf_class < handle
 %                     measurements:       4xn    
 %             Outputs:
 %                     z:                  4x1
-%                     outliers:           nx1            
+%                     outliers:           nx1   
+%                     nu:                 6x1
             n = size(measurements,2);
             N = size(measurements,1); %Dimension
             
@@ -90,19 +91,19 @@ classdef kf_class < handle
             zi_hat = H*mu_bar;
             norm = 1/( ((2*pi)^(N/2))*(det(S))^0.5 );
             
-            phi = zeros(n,1); %Likelihood
+            phis = zeros(n,1); %Likelihood
             D   = zeros(n,1); %Mahalanobis Distance
             nus = zeros(N,n);
             for i=1:n %Possible factorization?
                 zi = measurements(:,i);
                 nus(:,i) = zi-zi_hat;
                 D(i) = nus(:,i)'*Sinv*nus(:,i);
-                phi(i) = norm*exp(-0.5*D(i));
+                phis(i) = norm*exp(-0.5*D(i));
             end
             outliers = D>obj.lambdaM;
             %Take the most likely measurement
-            [~,iMax] = max(phi,[],1);
-            nu = nus(:,iMax);
+            [~,iMax] = max(phis,[],1);
+            nu = nus(:,iMax);            
         end
         
         function [H] = observation_model(obj)
@@ -117,8 +118,8 @@ classdef kf_class < handle
 %         Inputs:
 %                 mu_bar:             6x1
 %                 sigma_bar:          6x6
-%                 R:                  6x6
-%                 z:                  4x1
+%                 S:                  4x4
+%                 nu:                 4x1
 %         Outputs:
 %                 mu:                 6x1
 %                 sigma:              6x6            

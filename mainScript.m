@@ -7,5 +7,5 @@ dbstop(s);
 
 
 videoFile = 'viptraffic.avi';
-filter = 1; %KF = 0, PF = 1
+filter = 0; %KF = 0, PF = 1
 main(videoFile,filter);

@@ -41,7 +41,6 @@ figure;
 % open(writerObj)
 
 while ~isDone(videoObj)
-    
     i = i+1;
 %     tic;
     frame = step(videoObj);
@@ -85,12 +84,12 @@ while ~isDone(videoObj)
             
             % Tracking of vehicles
             params = kf_config();
-            [trackedObjects] = tracking_kf(measurements,params); %6xM
+            [trackedObjects] = tracking_kf(measurements,params,M,N); %6xM
         else
             trackedObjects = [];
         end
     end
-
+        size(trackedObjects)
 %     tfilter = toc;
 %     fprintf('Filter time: %.3f\n',tfilter);
 %     tms = [tms tfilter];
@@ -104,6 +103,8 @@ while ~isDone(videoObj)
         
         if filter
             processedFrame = insertMarker(frame,pf.S(1:2,:)','o','Size',1,'color','blue'); %Show particles
+        else
+            processedFrame = frame;
         end
         processedFrame = insertShape(processedFrame,'Rectangle',[modifiedCentres' trackedObjects(3:4,:)'],'Color','red');
         processedFrame = insertShape(processedFrame,'Circle',[trackedObjects(1:2,:)' 2 * ones(size(trackedObjects,2),1)],'Color','green');
