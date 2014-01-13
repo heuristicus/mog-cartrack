@@ -2,3 +2,5 @@ Run the mainScript function to see things work. To change the video being used,
 change the video file parameter in mainScript. Parameters for the KF and PF can be changed
 in the kf_config and pf_defaults files. Examples of the code working in video form
 can be seen by looking at video files with "_tracking" in the name.
+
+Authors: Carlos Galvez Del Postigo and Michal Staniaszek
