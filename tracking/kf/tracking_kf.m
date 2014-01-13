@@ -12,7 +12,7 @@ function [trackedObjects] = tracking_kf(measurements,params,height,width)
 
 persistent filters; %Set of instances of the "kf_class", which represent a KF
 
-n = size(measurements,2) %Number of measurements
+n = size(measurements,2); %Number of measurements
 
 display(sprintf('Number of Kalman Filters: %d',size(filters,1)));
 %% 1.- Update previous Kalman Filters
@@ -20,7 +20,6 @@ outliers = ones(n,1); %Measurements that have not been matched
 if ~isempty(filters)
    [filters,outliers] = updateKFs(filters,measurements); 
 end
-outliers
 %% 2.- Create new Kalman Filters for the outliers
 filters = createNewKFs(filters,outliers,measurements,params);
 

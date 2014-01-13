@@ -14,7 +14,7 @@ function [filters,outliers] = updateKFs(filters,measurements)
 %                 filters:            Mx1 array of struct kf_class
 %                 outliers:           nx1
 
-M = size(filters);        %Number of filters
+M = size(filters,1);       %Number of filters
 n = size(measurements,2); %Number of measurements
 N = size(measurements,1); %Dimension of measurement vector
 
