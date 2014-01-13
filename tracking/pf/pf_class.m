@@ -393,7 +393,7 @@ classdef pf_class < handle
         end
         
         function new_particles = systematic_resampling(obj,particles)
-            cdf = cumsum(particles(7,:))
+            cdf = cumsum(particles(7,:));
             nParticles = obj.resampled_particles;
             % initial random value between 0 and 1/resampled_particles. Do
             % not use 1/total_particles, because that would mean that

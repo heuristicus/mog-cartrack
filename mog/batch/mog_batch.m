@@ -1,4 +1,4 @@
-function [foreground,background,model] = mog_batch(image,parameters)
+function [foreground,model] = mog_batch(image,parameters)
 %MOG Summary of this function goes here
 % Applies the Mixture of Gaussians algorithm to create the foreground
 % image. The update is done simultaneously for all the pixels, giving
@@ -81,7 +81,5 @@ matchMask = matchMask(matchMask~=0);
 %Set the foreground mask to 0 for the background pixels
 foreground(matchMask) = 0;
 
-%Other interesting output
-% background = uint8(background);
 model = models;
 end
