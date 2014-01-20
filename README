@@ -1,6 +1,95 @@
-Run the mainScript function to see things work. To change the video being used,
-change the video file parameter in mainScript. Parameters for the KF and PF can be changed
-in the kf_config and pf_defaults files. Examples of the code working in video form
-can be seen by looking at video files with "_tracking" in the name.
+---Applied Estimation Project---
+Vehicle tracking with Mixture of Gaussian, Kalman and Particle Filter
+Authors:
+    Michal Staniaszek
+    Carlos Galvez del Postigo Fernandez
 
-Authors: Carlos Galvez Del Postigo and Michal Staniaszek
+=======================================================================
+Directory structure:
+  -code/
+      /mog/
+      /tracking/
+			/kf/
+			/pf/
+	  main.m
+	  mainScript.m
+  -datasets/
+  -demos/
+    	  
+=======================================================================
+
+Run "mainScript.m" to test the algorithm. Parameters to configure:
+
+	videofile: name of the input video file (make sure you have appropriate codecs)
+	filter: select the filter used. 0 = Kalman Filter, 1 = Particle Filter
+	writeToFile: 1 to create an output video file of the tracked vehicles.
+	filename: name of the output filename
+	verbose: 1 to display particles
+	RESIZE: resizing factor of the image. 1 = no resize, 0.5 = half size, etc.
+
+Change the minimum and maximum blob area in "main.m":
+	BLOB_SIZE_MIN (line 22)
+	BLOB_SIZE_MAX (line 23)
+
+Configure Mixture of Gaussians parameters: "mog_configure.m"
+	ALPHA      %Learning rate (0.001-0.1)
+	K          %Number of gaussians (3-5)
+	T          %Fraction of background over foreground (0.7-0.9)
+	SIGMA0     %Initial variance 
+	WEIGHT0    %Initial weight
+
+Configure Kalman Filter parameters: "kf_config.m":
+	R - process noise
+	Q - measurement noise
+	sigma0 - initial variance
+	dt = 1; %1 frame
+	deltaM  Percentage of measurements that we think are valid
+
+Configure Particle Filter parameters: "pf_defaults.m":
+	process_noise
+	measurement_noise 
+	nparticles  (1000-10000)
+
+================================================================================
+Running examples
+
+The test videos are found in the folder "datasets/"
+
+1) 'viptraffic.avi' with KF
+
+videoFile = 'viptraffic.mp4'; %Input video file
+filter = 0; %KF = 0, PF = 1
+writeToFile = 0; %0 = no, 1 = yes
+filename = 'visionKF'; %name of the output video file
+verbose=0; %1 = display particles
+RESIZE = 1; %1 = No resizing, 0.5 = image resized to a half, etc
+
+BLOB_SIZE_MIN = round((N/20)^2); %in pixels
+BLOB_SIZE_MAX = round((N/2)^2); %in pixels
+
+------------------------------------------------------------------------------
+2) 'visiontraffic.avi' with PF
+
+videoFile = 'visiontraffic.avi'; %Input video file
+filter = 1; %KF = 0, PF = 1
+writeToFile = 0; %0 = no, 1 = yes
+filename = 'visionKF'; %name of the output video file
+verbose=0; %1 = display particles
+RESIZE = 1; %1 = No resizing, 0.5 = image resized to a half, etc
+
+BLOB_SIZE_MIN = round((N/20)^2); %in pixels
+BLOB_SIZE_MAX = round((N/2)^2); %in pixels
+
+------------------------------------------------------------------------------
+
+3) 'mv2_005.mp4' with KF with pedestrian detection
+
+videoFile = 'visiontraffic.avi'; %Input video file
+filter = 0; %KF = 0, PF = 1
+writeToFile = 0; %0 = no, 1 = yes
+filename = 'visionKF'; %name of the output video file
+verbose=0; %1 = display particles
+RESIZE = 0.5; %1 = No resizing, 0.5 = image resized to a half, etc
+
+BLOB_SIZE_MIN = round((N/200)^2); %in pixels
+BLOB_SIZE_MAX = round((N/2)^2); %in pixels
